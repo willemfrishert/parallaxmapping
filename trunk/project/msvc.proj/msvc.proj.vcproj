@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\tga.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\TVertex.cpp"
 				>
 			</File>
@@ -224,6 +228,10 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\CMyUiEvents.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\tga.h"
 				>
 			</File>
 			<File
