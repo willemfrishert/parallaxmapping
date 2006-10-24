@@ -197,7 +197,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\tga.c"
+				RelativePath="..\..\src\tga.cpp"
 				>
 			</File>
 			<File

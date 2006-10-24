@@ -2,6 +2,7 @@
 #include "CMyRenderer.h"
 #include "TVertex.h"
 #include "3ds.h"
+#include "tga.h"
 
 //USE THIS FILE
 
@@ -22,6 +23,7 @@ const float KZFar	= 600.0f;
 CMyRenderer* CMyRenderer::iCurrentRenderer = 0;
 
 float angle = 0;
+GLuint textureId = 0;
 
 //CONSTRUCTORS
 //
@@ -54,6 +56,8 @@ void CMyRenderer::InitMain()
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
+
+	textureId = loadTGATexture("../../textures/bricks.tga");
 }
 
 
@@ -159,7 +163,7 @@ void CMyRenderer::RenderScene()
 	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
 	GLfloat specular[4] = {1, 1, 1, 1.0};
 	GLfloat light_pos[4] = {0, 0, 1, 0};
-	GLfloat shininess = 128;
+	GLfloat shininess = 10;
 
 	// since we are scaling (in our particular case, uniform scaling) 
 	// the object, the normals need to be rescaled
@@ -168,8 +172,12 @@ void CMyRenderer::RenderScene()
 	glEnable(GL_LIGHT0);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+	//glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
 	//glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+	//glDisable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textureId);
 
 	glPushMatrix();
 	glTranslatef(0, 0, -15);
