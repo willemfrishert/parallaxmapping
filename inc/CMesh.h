@@ -5,6 +5,7 @@
 
 class CMesh
 {
+  //PUBLIC METHODS
 public:
 	CMesh();
 	~CMesh(void);
@@ -17,7 +18,15 @@ public:
 
 	void setBinormalLocation(GLuint aLocation);
 	void setTangentLocation(GLuint aLocation);
+  //PRIVATE METHODS
+private:
+  void CreateInverseTBNMatrix(const TVector3<float> aVertices[3], const TVector2<float> aTextureCoordinates[3],
+                              TVector3<float>& aInverseNormal, TVector3<float>& aInverseBinormal, TVector3<float>& aInverseTangent);
 
+  //PUBLIC VARIABLES
+public:
+    
+  //PRIVATE VARIABLES
 private:
 	vector<TVertex> iVertices;
 	vector<GLuint> iIndices;
