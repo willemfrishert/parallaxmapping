@@ -20,7 +20,7 @@
 			OutputDirectory="..\..\bin\w32"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -193,7 +193,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\ExtensionsLoader.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\ShaderAttributeObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\ShaderObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\ShaderProgram.cpp"
 				>
 			</File>
 			<File
@@ -231,6 +247,30 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\inc\ExtensionsLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderAttributeObject.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderAttributeValue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderAttributeVector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderObject.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderProgram.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\tga.h"
 				>
 			</File>
@@ -252,6 +292,18 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="shaders"
+			>
+			<File
+				RelativePath="..\..\shader\bumpmap.frag"
+				>
+			</File>
+			<File
+				RelativePath="..\..\shader\bumpmap.vert"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
