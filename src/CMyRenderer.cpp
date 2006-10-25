@@ -24,6 +24,7 @@ CMyRenderer* CMyRenderer::iCurrentRenderer = 0;
 
 float angle = 0;
 GLuint textureId = 0;
+GLuint bumpMapId = 0;
 
 //CONSTRUCTORS
 //
@@ -45,6 +46,18 @@ CMyRenderer::~CMyRenderer()
 {
 }
 
+void CMyRenderer::InitShaders()
+{
+	iVertexShader = new ShaderObject(GL_VERTEX_SHADER, "shader/bumpmap.vert");
+	iFragmentShader = new ShaderObject(GL_FRAGMENT_SHADER, "shader/bumpmap.frag");
+
+	iShaderProgram = new ShaderProgram();
+	
+	iShaderProgram->attachShader( *iVertexShader);
+	iShaderProgram->attachShader( *iFragmentShader );
+
+	iShaderProgram->buildProgram();
+}
 
 //
 /// Init function for the constructors
@@ -58,6 +71,7 @@ void CMyRenderer::InitMain()
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
 	textureId = loadTGATexture("textures/bricks.tga");
+	bumpMapId = loadTGATexture("textures/bricks_bump.tga");
 }
 
 
@@ -177,7 +191,7 @@ void CMyRenderer::RenderScene()
 
 	//glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindTexture(GL_TEXTURE_2D, bumpMapId);
 
 	glPushMatrix();
 	glTranslatef(0, 0, -15);
