@@ -57,7 +57,7 @@ void CMyRenderer::InitMain()
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
-	textureId = loadTGATexture("../../textures/bricks.tga");
+	textureId = loadTGATexture("textures/bricks.tga");
 }
 
 
@@ -71,7 +71,7 @@ void CMyRenderer::CreateScene()
 {
 	Load3ds modelLoader;
 	
-	this->mesh = modelLoader.Create("../../3ds/torus.3ds");
+	this->mesh = modelLoader.Create("3ds/torus.3ds");
 }
 
 
