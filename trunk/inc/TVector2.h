@@ -13,7 +13,7 @@ public:
 
 	TVector2 operator + ( TVector2 const & other) const;
 	TVector2 operator - ( TVector2 const & other) const;
-  TVector2 operator - () const;
+	TVector2 operator - () const;
 	TVector2 operator * ( T const & other) const;
 	TVector2 operator / ( TVector2 const & other) const;
 
@@ -41,14 +41,14 @@ public:
 	TVector2& Normalize();
 
 	static T Angle( const TVector2& p1, const TVector2& p2);
-	
+
 	// Angle between unitary vectors
 	static T AngleN( const TVector2& p1, const TVector2& p2);
 
 	// Modifiers
 	void setX(const T x);
 	void setY(const T y);
-  void set(const T x, const T y);
+	void set(const T x, const T y);
 
 protected:
 	T iX;
@@ -291,6 +291,6 @@ template <class T>
 inline
 void TVector2<T>::set(const T x, const T y)
 {
-  iX = x;
-  iY = y;
+	iX = x;
+	iY = y;
 }
