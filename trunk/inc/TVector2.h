@@ -13,6 +13,7 @@ public:
 
 	TVector2 operator + ( TVector2 const & other) const;
 	TVector2 operator - ( TVector2 const & other) const;
+  TVector2 operator - () const;
 	TVector2 operator * ( T const & other) const;
 	TVector2 operator / ( TVector2 const & other) const;
 
@@ -47,6 +48,7 @@ public:
 	// Modifiers
 	void setX(const T x);
 	void setY(const T y);
+  void set(const T x, const T y);
 
 protected:
 	T iX;
@@ -94,6 +96,13 @@ inline
 TVector2<T> TVector2<T>::operator - ( TVector2 const & other) const
 { 
 	return TVector2( iX - other.iX, iY - other.iY );
+}
+
+template <class T>
+inline 
+TVector2<T> TVector2<T>::operator - () const
+{ 
+	return TVector2( -iX, -iY );
 }
 
 template <class T>
@@ -276,4 +285,12 @@ inline
 void TVector2<T>::setY(const T y)
 {
 	iY = y;
+}
+
+template <class T>
+inline
+void TVector2<T>::set(const T x, const T y)
+{
+  iX = x;
+  iY = y;
 }

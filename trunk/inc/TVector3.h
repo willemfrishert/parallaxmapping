@@ -13,6 +13,7 @@ public:
 
 	TVector3 operator + ( TVector3 const & other) const;
 	TVector3 operator - ( TVector3 const & other) const;
+  TVector3 operator - () const;
 	TVector3 operator * ( T const & other) const;
 	TVector3 operator / ( TVector3 const & other) const;
 
@@ -57,7 +58,7 @@ public:
 	void setX(const T x);
 	void setY(const T y);
 	void setZ(const T z);
-
+  void set(const T x, const T y, const T z);
 protected:
 	T iX;
 	T iY;
@@ -107,6 +108,13 @@ inline
 TVector3<T> TVector3<T>::operator - ( TVector3 const & other) const
 { 
 	return TVector3( iX - other.iX, iY - other.iY, iZ - other.iZ );
+}
+
+template <class T>
+inline 
+TVector3<T> TVector3<T>::operator - () const
+{ 
+	return TVector3( -iX, -iY, -iZ );
 }
 
 template <class T>
@@ -348,4 +356,13 @@ inline
 void TVector3<T>::setZ(const T z)
 {
 	iZ = z;
+}
+
+template <class T>
+inline
+void TVector3<T>::set(const T x, const T y, const T z)
+{
+  iX = x;
+  iY = y;
+  iZ = z;
 }
