@@ -3,6 +3,8 @@
 
 #include "Basic.h"
 #include "CMesh.h"
+#include "ShaderObject.h"
+#include "ShaderProgram.h"
 
 
 //CONSTANTS:
@@ -64,6 +66,9 @@ private:
 	//Constructors will call this one
 	void InitMain();
 
+	// Initializes the shaders
+	void InitShaders();
+
 	//Render current object
 	void RenderObject( );
 
@@ -101,6 +106,9 @@ private:
 	int iFrame;				//< Current frame number (used to approximate FPS)
 
 	CMesh* mesh;
+	ShaderProgram* iShaderProgram;
+	ShaderObject* iVertexShader;
+	ShaderObject* iFragmentShader;
 };
 
 
