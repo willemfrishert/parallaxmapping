@@ -1,8 +1,11 @@
 #include "ExtensionsLoader.h"
 
+#ifdef WIN32
 #include <windows.h>
-#include <stdio.h>
 #include <gl/glew.h>
+#endif
+
+#include <stdio.h>
 
 static bool loadedExtensions = false;
 
@@ -36,7 +39,7 @@ int ExtensionsLoader::loadExtensions()
 #else
 		FILE * out = fopen("vglinit.log", "w+");
 #endif
-
+#ifdef WIN32
 		GLenum err = glewInit();
 		if (err != GLEW_OK) {
 			printError("Loading Extensions",
@@ -46,6 +49,9 @@ int ExtensionsLoader::loadExtensions()
 		} else {
 			loadedExtensions = true;
 		}
+#else
+    loadedExtensions = true;
+#endif
 
 		fclose(out);
 	}

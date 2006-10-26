@@ -31,10 +31,37 @@
 #include "tga.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef WIN32
 #include <GL/glut.h>
+#elif __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glu.h>
+#endif
 
 /* texture id for exemple */
 GLuint texId = 0;
+
+#ifdef __APPLE__
+short SwapTwoBytes(short w)
+	{
+	short tmp;
+	tmp =  (w & 0x00FF);
+	tmp = ((w & 0xFF00) >> 0x08) | (tmp << 0x08);
+	return(tmp);
+	}
+
+int SwapFourBytes(int dw)
+	{
+	int tmp;
+	tmp =  (dw & 0x000000FF);
+	tmp = ((dw & 0x0000FF00) >> 0x08) | (tmp << 0x08);
+	tmp = ((dw & 0x00FF0000) >> 0x10) | (tmp << 0x08);
+	tmp = ((dw & 0xFF000000) >> 0x18) | (tmp << 0x08);
+	return(tmp);
+	}
+#endif
 
 void
 GetTextureInfo (tga_header_t *header, gl_texture_t *texinfo)
@@ -434,6 +461,16 @@ ReadTGAFile (const char *filename)
 
   /* read header */
   fread (&header, sizeof (tga_header_t), 1, fp);
+	
+#ifdef __APPLE__
+	header.cm_first_entry = SwapTwoBytes( header.cm_first_entry );
+	header.cm_length      = SwapTwoBytes( header.cm_length );
+	header.x_origin       = SwapTwoBytes( header.x_origin );
+	header.y_origin       = SwapTwoBytes( header.y_origin );
+	header.width          = SwapTwoBytes( header.width );
+	header.height         = SwapTwoBytes( header.height );
+#endif
+	
 
   texinfo = (gl_texture_t *)malloc (sizeof (gl_texture_t));
   GetTextureInfo (&header, texinfo);
@@ -525,10 +562,9 @@ ReadTGAFile (const char *filename)
     case 11:
       /* RLE compressed 8 or 16 bits grayscale */
       if (header.pixel_depth == 8)
-	ReadTGAgray8bitsRLE (fp, texinfo);
+		ReadTGAgray8bitsRLE (fp, texinfo);
       else /* 16 */
-	ReadTGAgray16bitsRLE (fp, texinfo);
-
+		ReadTGAgray16bitsRLE (fp, texinfo);
       break;
 
     default:
@@ -586,122 +622,4 @@ loadTGATexture (const char *filename)
 
   return tex_id;
 }
-
-
-/*
-void
-init (const char *filename)
-{
-
-  glClearColor (0.5f, 0.5f, 0.5f, 1.0f);
-  glShadeModel (GL_SMOOTH);
-
-  glEnable (GL_DEPTH_TEST);
-
-  glEnable (GL_BLEND);
-  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-  if ( !(texId = loadTGATexture (filename)))
-    {
-      exit (-1);
-    }
-}
-
-
-void
-shutdownApp (void)
-{
-  glDeleteTextures (1, &texId);
-}
-
-
-void
-reshape (int w, int h)
-{
-  if (h == 0)
-    h = 1;
-
-  glViewport (0, 0, (GLsizei)w, (GLsizei)h);
-
-  glMatrixMode (GL_PROJECTION);
-  glLoadIdentity ();
-  gluPerspective (45.0, (GLfloat)w/(GLfloat)h, 0.1, 1000.0);
-
-  glMatrixMode (GL_MODELVIEW);
-  glLoadIdentity ();
-
-  glutPostRedisplay ();
-}
-
-
-void
-display (void)
-{
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glLoadIdentity ();
-
-  glEnable (GL_TEXTURE_2D);
-  glBindTexture (GL_TEXTURE_2D, texId);
-
-
-  glTranslatef (0.0, 0.0, -5.0);
-  glBegin (GL_QUADS);
-    glTexCoord2f (0.0f, 0.0f);
-    glVertex3f (-1.0f, -1.0f, 0.0f);
-
-    glTexCoord2f (1.0f, 0.0f);
-    glVertex3f (1.0f, -1.0f, 0.0f);
-
-    glTexCoord2f (1.0f, 1.0f);
-    glVertex3f (1.0f, 1.0f, 0.0f);
-
-    glTexCoord2f (0.0f, 1.0f);
-    glVertex3f (-1.0f, 1.0f, 0.0f);
-  glEnd  ();
-
-  glDisable (GL_TEXTURE_2D);
-
-  glutSwapBuffers ();
-}
-
-
-void
-keyboard (unsigned char key, int x, int y)
-{
-  switch (key)
-    {
-    case 27: 
-      exit(0);
-      break;
-    }
-}
-
-
-int
-main (int argc, char *argv[])
-{
-  if (argc < 2)
-    {
-      fprintf (stderr, "usage: %s filename.tga\n", argv[0]);
-      return -1;
-    }
-
-  glutInit (&argc, argv);
-  glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-  glutInitWindowSize (640, 480);
-  glutCreateWindow ("TGA Texture Demo");
-
-  atexit (shutdownApp);
-  init (argv[1]);
-
-  glutReshapeFunc (reshape);
-  glutDisplayFunc (display);
-  glutKeyboardFunc (keyboard);
-
-  glutMainLoop ();
-
-  return 0;
-}
-*/
 

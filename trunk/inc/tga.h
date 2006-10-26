@@ -32,7 +32,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef WIN32
 #include <GL/glut.h>
+#elif __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glu.h>
+#endif
 
 /* OpenGL texture info */
 typedef struct
