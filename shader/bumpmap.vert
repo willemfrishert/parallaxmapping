@@ -1,13 +1,13 @@
-varying vec4 passcolor; //The vertex color passed
-varying vec3 LightDir; //The transformed light direction, to pass to the fragment shader
+varying vec4 passColor; //The vertex color passed
+varying vec3 lightDir; //The transformed light direction, to pass to the fragment shader
 attribute vec3 tangent; //The inverse tangent to the geometry
 attribute vec3 binormal; //The inverse binormal to the geometry
-uniform vec3 lightdir; //The direction the light is shining
+//uniform vec3 lightdir; //The direction the light is shining
 
 void main() 
 {
 	//Put the color in a varying variable
-	passcolor = gl_Color;
+	passColor = gl_Color;
 	
 	//Put the vertex in the position passed
 	gl_Position = ftransform(); 
@@ -16,10 +16,10 @@ void main()
 	mat3 rotmat = mat3(tangent,binormal,gl_Normal);
 	
 	//Rotate the light into tangent space
-	LightDir = rotmat * normalize(lightdir);
+	lightDir = rotmat * normalize(gl_LightSource[0].position.xyz);
 	
 	//Normalize the light
-	normalize(LightDir); 
+	normalize(lightDir); 
 	
 	//Use the first set of texture coordinates in the fragment shader 
 	gl_TexCoord[0] = gl_MultiTexCoord0;
