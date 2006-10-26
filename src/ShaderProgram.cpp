@@ -1,5 +1,8 @@
+#ifdef WIN32
 #include <windows.h>
 #include <gl/glew.h>
+#endif
+
 #include "ShaderObject.h"
 #include "ShaderAttributeObject.h"
 #include "ShaderProgram.h"

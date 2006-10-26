@@ -1,7 +1,10 @@
 #include <stdio.h>
+
+#ifdef WIN32
 #include <windows.h>
 #include <io.h>
 #include <gl/glew.h>
+#endif
 
 #include "ShaderObject.h"
 #include "ExtensionsLoader.h"
@@ -87,7 +90,12 @@ unsigned char* ShaderObject::readShaderFile(const char *filename)
 #ifdef WIN32
 	bytesinfile = _filelength(_fileno(file));
 #else
-	bytesinfile = filelength(fileno(file));
+	//filelength not Posix. Not supported by Mac/Linux
+	//bytesinfile = filelength(fileno(file));
+	
+	fseek(file, 0, SEEK_END);
+	bytesinfile = ftell(file);
+	fseek(file, 0, SEEK_SET);	
 #endif
 	
 	buffer = (unsigned char*)malloc(bytesinfile);

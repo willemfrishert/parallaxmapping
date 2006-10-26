@@ -1,4 +1,5 @@
 #pragma once
+#include "Basic.h"
 
 class ShaderAttributeObject
 {
@@ -21,7 +22,7 @@ protected:
 	void setUniform(GLint location, float value) const;
 	void setUniform(GLint location, int value) const;
 	void setUniform(GLint location, float* value, int count) const;
-	void setUniform(GLint location, int* value, int count ) const;
+	void setUniform(GLint location, GLint* value, GLsizei count ) const;
 
 protected:
 	GLint location;

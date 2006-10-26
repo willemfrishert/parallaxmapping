@@ -1,0 +1,320 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4385DD8A0AF012E700039AED /* 3ds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD770AF012E700039AED /* 3ds.cpp */; };
+		4385DD8B0AF012E700039AED /* CMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD780AF012E700039AED /* CMesh.cpp */; };
+		4385DD8C0AF012E700039AED /* CMyRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD790AF012E700039AED /* CMyRenderer.cpp */; };
+		4385DD8D0AF012E700039AED /* CMyUiEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7A0AF012E700039AED /* CMyUiEvents.cpp */; };
+		4385DD8E0AF012E700039AED /* ExtensionsLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7B0AF012E700039AED /* ExtensionsLoader.cpp */; };
+		4385DD8F0AF012E700039AED /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7C0AF012E700039AED /* Main.cpp */; };
+		4385DD900AF012E700039AED /* ShaderAttributeObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7D0AF012E700039AED /* ShaderAttributeObject.cpp */; };
+		4385DD910AF012E700039AED /* ShaderObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7E0AF012E700039AED /* ShaderObject.cpp */; };
+		4385DD920AF012E700039AED /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7F0AF012E700039AED /* ShaderProgram.cpp */; };
+		4385DD930AF012E700039AED /* tga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD800AF012E700039AED /* tga.cpp */; };
+		4385DD940AF012E700039AED /* TVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD810AF012E700039AED /* TVertex.cpp */; };
+		4385DD9E0AF0139D00039AED /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 4385DD960AF0139D00039AED /* textures */; };
+		4385DDB10AF013B000039AED /* shader in Resources */ = {isa = PBXBuildFile; fileRef = 4385DDAD0AF013B000039AED /* shader */; };
+		4385DE7E0AF03C0100039AED /* 3ds in Resources */ = {isa = PBXBuildFile; fileRef = 4385DE750AF03C0100039AED /* 3ds */; };
+		43ADFEF50AF00EF400189F6C /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADFEF30AF00EF400189F6C /* GLUT.framework */; };
+		43ADFEF60AF00EF400189F6C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADFEF40AF00EF400189F6C /* OpenGL.framework */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		32CA4F630368D1EE00C91783 /* xcode_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xcode_Prefix.pch; sourceTree = "<group>"; };
+		4385DD660AF012E700039AED /* 3ds.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = 3ds.h; sourceTree = "<group>"; };
+		4385DD670AF012E700039AED /* Basic.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Basic.h; sourceTree = "<group>"; };
+		4385DD680AF012E700039AED /* CMesh.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMesh.h; sourceTree = "<group>"; };
+		4385DD690AF012E700039AED /* CMyRenderer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMyRenderer.h; sourceTree = "<group>"; };
+		4385DD6A0AF012E700039AED /* CMyUiEvents.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMyUiEvents.h; sourceTree = "<group>"; };
+		4385DD6B0AF012E700039AED /* ExtensionsLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ExtensionsLoader.h; sourceTree = "<group>"; };
+		4385DD6C0AF012E700039AED /* ShaderAttributeObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeObject.h; sourceTree = "<group>"; };
+		4385DD6D0AF012E700039AED /* ShaderAttributeValue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeValue.h; sourceTree = "<group>"; };
+		4385DD6E0AF012E700039AED /* ShaderAttributeVector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeVector.h; sourceTree = "<group>"; };
+		4385DD6F0AF012E700039AED /* ShaderObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderObject.h; sourceTree = "<group>"; };
+		4385DD700AF012E700039AED /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
+		4385DD710AF012E700039AED /* tga.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tga.h; sourceTree = "<group>"; };
+		4385DD720AF012E700039AED /* TVector2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVector2.h; sourceTree = "<group>"; };
+		4385DD730AF012E700039AED /* TVector3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVector3.h; sourceTree = "<group>"; };
+		4385DD750AF012E700039AED /* TVertex.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVertex.h; sourceTree = "<group>"; };
+		4385DD770AF012E700039AED /* 3ds.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = 3ds.cpp; sourceTree = "<group>"; };
+		4385DD780AF012E700039AED /* CMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CMesh.cpp; sourceTree = "<group>"; };
+		4385DD790AF012E700039AED /* CMyRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CMyRenderer.cpp; sourceTree = "<group>"; };
+		4385DD7A0AF012E700039AED /* CMyUiEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CMyUiEvents.cpp; sourceTree = "<group>"; };
+		4385DD7B0AF012E700039AED /* ExtensionsLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ExtensionsLoader.cpp; sourceTree = "<group>"; };
+		4385DD7C0AF012E700039AED /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
+		4385DD7D0AF012E700039AED /* ShaderAttributeObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderAttributeObject.cpp; sourceTree = "<group>"; };
+		4385DD7E0AF012E700039AED /* ShaderObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderObject.cpp; sourceTree = "<group>"; };
+		4385DD7F0AF012E700039AED /* ShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderProgram.cpp; sourceTree = "<group>"; };
+		4385DD800AF012E700039AED /* tga.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = tga.cpp; sourceTree = "<group>"; };
+		4385DD810AF012E700039AED /* TVertex.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TVertex.cpp; sourceTree = "<group>"; };
+		4385DD960AF0139D00039AED /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = ../../textures; sourceTree = SOURCE_ROOT; };
+		4385DDAD0AF013B000039AED /* shader */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shader; path = ../../shader; sourceTree = SOURCE_ROOT; };
+		4385DE750AF03C0100039AED /* 3ds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = 3ds; path = ../../3ds; sourceTree = SOURCE_ROOT; };
+		43ADFEF30AF00EF400189F6C /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+		43ADFEF40AF00EF400189F6C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* parallaxmapping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = parallaxmapping.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				43ADFEF50AF00EF400189F6C /* GLUT.framework in Frameworks */,
+				43ADFEF60AF00EF400189F6C /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* parallaxmapping.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* xcode */ = {
+			isa = PBXGroup;
+			children = (
+				4385DE7F0AF03C0D00039AED /* resources */,
+				4385DD650AF012E700039AED /* inc */,
+				4385DD760AF012E700039AED /* src */,
+				29B97317FDCFA39411CA2CEA /* apple */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = xcode;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* apple */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* xcode_Prefix.pch */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+			);
+			name = apple;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				43ADFEF30AF00EF400189F6C /* GLUT.framework */,
+				43ADFEF40AF00EF400189F6C /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4385DD650AF012E700039AED /* inc */ = {
+			isa = PBXGroup;
+			children = (
+				4385DD660AF012E700039AED /* 3ds.h */,
+				4385DD670AF012E700039AED /* Basic.h */,
+				4385DD680AF012E700039AED /* CMesh.h */,
+				4385DD690AF012E700039AED /* CMyRenderer.h */,
+				4385DD6A0AF012E700039AED /* CMyUiEvents.h */,
+				4385DD6B0AF012E700039AED /* ExtensionsLoader.h */,
+				4385DD6C0AF012E700039AED /* ShaderAttributeObject.h */,
+				4385DD6D0AF012E700039AED /* ShaderAttributeValue.h */,
+				4385DD6E0AF012E700039AED /* ShaderAttributeVector.h */,
+				4385DD6F0AF012E700039AED /* ShaderObject.h */,
+				4385DD700AF012E700039AED /* ShaderProgram.h */,
+				4385DD710AF012E700039AED /* tga.h */,
+				4385DD720AF012E700039AED /* TVector2.h */,
+				4385DD730AF012E700039AED /* TVector3.h */,
+				4385DD750AF012E700039AED /* TVertex.h */,
+			);
+			name = inc;
+			path = ../../inc;
+			sourceTree = SOURCE_ROOT;
+		};
+		4385DD760AF012E700039AED /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4385DD770AF012E700039AED /* 3ds.cpp */,
+				4385DD780AF012E700039AED /* CMesh.cpp */,
+				4385DD790AF012E700039AED /* CMyRenderer.cpp */,
+				4385DD7A0AF012E700039AED /* CMyUiEvents.cpp */,
+				4385DD7B0AF012E700039AED /* ExtensionsLoader.cpp */,
+				4385DD7C0AF012E700039AED /* Main.cpp */,
+				4385DD7D0AF012E700039AED /* ShaderAttributeObject.cpp */,
+				4385DD7E0AF012E700039AED /* ShaderObject.cpp */,
+				4385DD7F0AF012E700039AED /* ShaderProgram.cpp */,
+				4385DD800AF012E700039AED /* tga.cpp */,
+				4385DD810AF012E700039AED /* TVertex.cpp */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = SOURCE_ROOT;
+		};
+		4385DE7F0AF03C0D00039AED /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				4385DE750AF03C0100039AED /* 3ds */,
+				4385DDAD0AF013B000039AED /* shader */,
+				4385DD960AF0139D00039AED /* textures */,
+			);
+			name = resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* parallaxmapping */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "parallaxmapping" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = parallaxmapping;
+			productInstallPath = "$(HOME)/Applications";
+			productName = xcode;
+			productReference = 8D1107320486CEB800E47090 /* parallaxmapping.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "xcode" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* xcode */;
+			projectDirPath = "";
+			targets = (
+				8D1107260486CEB800E47090 /* parallaxmapping */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4385DD9E0AF0139D00039AED /* textures in Resources */,
+				4385DDB10AF013B000039AED /* shader in Resources */,
+				4385DE7E0AF03C0100039AED /* 3ds in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4385DD8A0AF012E700039AED /* 3ds.cpp in Sources */,
+				4385DD8B0AF012E700039AED /* CMesh.cpp in Sources */,
+				4385DD8C0AF012E700039AED /* CMyRenderer.cpp in Sources */,
+				4385DD8D0AF012E700039AED /* CMyUiEvents.cpp in Sources */,
+				4385DD8E0AF012E700039AED /* ExtensionsLoader.cpp in Sources */,
+				4385DD8F0AF012E700039AED /* Main.cpp in Sources */,
+				4385DD900AF012E700039AED /* ShaderAttributeObject.cpp in Sources */,
+				4385DD910AF012E700039AED /* ShaderObject.cpp in Sources */,
+				4385DD920AF012E700039AED /* ShaderProgram.cpp in Sources */,
+				4385DD930AF012E700039AED /* tga.cpp in Sources */,
+				4385DD940AF012E700039AED /* TVertex.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = parallaxmapping;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = parallaxmapping;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "parallaxmapping" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "xcode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

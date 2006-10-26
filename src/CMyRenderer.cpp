@@ -109,7 +109,7 @@ void CMyRenderer::FramesPerSec()
 		//sprintf_s(iFpsCountString,"FPS:%4.2f", iFrame*1000.0/( iCurrentTime - iPreviousTime ));
 		sprintf_s  (iFpsCountString,"FPS:%4.2f", iFrame*1000.0/( iCurrentTime - iPreviousTime ));
 #else
-		sprintf(iFpsCountString,"FPS:%4.2f - POLYCOUNT: %d - FOCUS: %4.2f - RANGE: %4.2f", iFrame*1000.0/( iCurrentTime - iPreviousTime ), iPolyCount, iFocus, iFocusArea);
+		sprintf(iFpsCountString,"FPS:%4.2f", iFrame*1000.0/( iCurrentTime - iPreviousTime ) );
 #endif
 		iPreviousTime = iCurrentTime;
 		iFrame = 0;

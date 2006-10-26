@@ -5,7 +5,7 @@
  * @author João Pedro Jorge
  */
 #pragma once
-
+#include "Basic.h"
 class ShaderObject
 {
 public:

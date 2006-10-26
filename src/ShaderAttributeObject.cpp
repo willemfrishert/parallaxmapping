@@ -1,5 +1,8 @@
+#ifdef WIN32
 #include <Windows.h>
 #include <gl/glew.h>
+#endif
+
 #include "ShaderAttributeObject.h"
 
 #include "ExtensionsLoader.h"
@@ -92,7 +95,7 @@ void ShaderAttributeObject::setUniform(GLint location, float* value, int count) 
  * @param value the value
  * @param count the number of elements
  */
-void ShaderAttributeObject::setUniform(GLint location, int* value, int count ) const
+void ShaderAttributeObject::setUniform(GLint location, GLint* value, GLsizei count ) const
 {
 	if ( count == 3 )
 	{
