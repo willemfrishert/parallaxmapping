@@ -26,8 +26,6 @@
  *
  * gcc -Wall -ansi -L/usr/X11R6/lib -lGL -lGLU -lglut tga.c -o tga
  */
-#define _CRT_SECURE_NO_DEPRECATE
-
 #include "tga.h"
 #include <stdio.h>
 #include <stdlib.h>
