@@ -93,6 +93,8 @@ void CMesh::draw()
 #endif
 }
 
+/**
+ */
 void CMesh::createInverseTBNMatrices()
 {
 	TTriangleIterator iterator( this );
@@ -100,8 +102,25 @@ void CMesh::createInverseTBNMatrices()
 
 	while ( iterator.getNextTriangle( indices ) )
 	{
+		TVertex& v0 = this->getVertex( indices[0] );
+		TVertex& v1 = this->getVertex( indices[1] );
+		TVertex& v2 = this->getVertex( indices[2] );
 
-		//createInverseTBNMatrix()
+		v0.iNormal.set( 0, 0 ,0 );
+		v1.iNormal.set( 0, 0 ,0 );
+		v2.iNormal.set( 0, 0 ,0 );
+
+		createInverseTBNMatrix( v0, v1, v2 );
+		createInverseTBNMatrix( v1, v2, v0 );
+		createInverseTBNMatrix( v2, v0, v1 );
+	}
+
+	vector<TVertex>::iterator vertexIterator = iVertices.begin();
+	for (;vertexIterator != iVertices.end(); vertexIterator++)
+	{
+		(*vertexIterator).iNormal.Normalize();
+		(*vertexIterator).iTangent.Normalize();
+		(*vertexIterator).iBinormal.Normalize();
 	}
 }
 
@@ -122,9 +141,9 @@ bool TTriangleIterator::getNextTriangle(GLuint* aIndices)
 	{
 		this->iMesh->getTriangleIndices(this->iCurrentTriangle, aIndices);
 
-		this->iCurrentTriangle[0]++;
-		this->iCurrentTriangle[1]++;
-		this->iCurrentTriangle[2]++;
+		this->iCurrentTriangle[0] += 3;
+		this->iCurrentTriangle[1] += 3;
+		this->iCurrentTriangle[2] += 3;
 
 		return true;
 	}
@@ -133,15 +152,16 @@ bool TTriangleIterator::getNextTriangle(GLuint* aIndices)
 }
 
 /**
+ * @description NOTE: the inverse TBN vectors are added and not substituted. 
+ *              The TBN vectors are NOT normalized.
  * @param aVertices
  * @param aTextureCoordinates
  * @param aInverseNormal
  * @param aInverseBinormal
  * @param aInverseTangent
  */
-//void CMesh::createInverseTBNMatrix(const TVector3<float> aVertices[3], const TVector2<float> aTextureCoordinates[3],
-//								   TVector3<float>& aInverseNormal, TVector3<float>& aInverseBinormal, TVector3<float>& aInverseTangent)
-void CMesh::createInverseTBNMatrix(TVertex& aVertex0, const TVertex& aVertex1, 
+void CMesh::createInverseTBNMatrix(TVertex& aVertex0, 
+								   const TVertex& aVertex1, 
 								   const TVertex& aVertex2)
 {
 	TVector3<float> v0v1 = aVertex1.iPosition - aVertex0.iPosition;
@@ -158,9 +178,9 @@ void CMesh::createInverseTBNMatrix(TVertex& aVertex0, const TVertex& aVertex1,
 	// if its very close to zero, create an orthogonal system by hand
 	if ( biasToZero(determinant) )
 	{
-		aVertex0.iTangent.set(	1.0f, 0.0f, 0.0f);
-		aVertex0.iBinormal.set(	0.0f, 1.0f, 0.0f);
-		aVertex0.iNormal.set(	0.0f, 0.0f, 1.0f);
+		aVertex0.iTangent.add(	1.0f, 0.0f, 0.0f);
+		aVertex0.iBinormal.add(	0.0f, 1.0f, 0.0f);
+		aVertex0.iNormal.add(	0.0f, 0.0f, 1.0f);
 	}
 	else
 	{
@@ -183,19 +203,18 @@ void CMesh::createInverseTBNMatrix(TVertex& aVertex0, const TVertex& aVertex1,
 			(B.x() * N.y() * T.z() - B.z() * N.y() * T.x()) +
 			(N.x() * T.y() * B.z() - N.z() * T.y() * B.x()) );
 
-		// In these three cases 
-
-		aVertex0.iTangent.set(  
+		// In these three cases the inverse TBN is stored
+		aVertex0.iTangent.add(  
 			(B^N).x() * invDeterminant2,
 			((-N)^T).x() * invDeterminant2,
 			(T^B).x() * invDeterminant2 );
 
-		aVertex0.iBinormal.set( 
+		aVertex0.iBinormal.add( 
 			((-B)^N).y() * invDeterminant2,
 			(N^T).y() * invDeterminant2,
 			((-T)^B).y() * invDeterminant2 );
 
-		aVertex0.iNormal.set( 
+		aVertex0.iNormal.add( 
 			(B^N).z() * invDeterminant2,
 			((-N)^T).z() * invDeterminant2,
 			(T^B).z() * invDeterminant2 );
