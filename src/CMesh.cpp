@@ -1,7 +1,5 @@
 #include "CMesh.h"
 
-#define ROUNDOFF(val) val
-
 CMesh::CMesh()
 : iIndicesCount( 0 )
 {
@@ -95,6 +93,18 @@ void CMesh::draw()
 #endif
 }
 
+void CMesh::createInverseTBNMatrices()
+{
+	TTriangleIterator iterator( this );
+	GLuint indices[3];
+
+	while ( iterator.getNextTriangle( indices ) )
+	{
+
+		//createInverseTBNMatrix()
+	}
+}
+
 /************************************************************************/
 /* CONVENIENCE CLASS TTRIANGLEITERATOR                                  */
 /************************************************************************/
@@ -129,54 +139,65 @@ bool TTriangleIterator::getNextTriangle(GLuint* aIndices)
  * @param aInverseBinormal
  * @param aInverseTangent
  */
-void CMesh::CreateInverseTBNMatrix(const TVector3<float> aVertices[3], const TVector2<float> aTextureCoordinates[3],
-								   TVector3<float>& aInverseNormal, TVector3<float>& aInverseBinormal, TVector3<float>& aInverseTangent)
+//void CMesh::createInverseTBNMatrix(const TVector3<float> aVertices[3], const TVector2<float> aTextureCoordinates[3],
+//								   TVector3<float>& aInverseNormal, TVector3<float>& aInverseBinormal, TVector3<float>& aInverseTangent)
+void CMesh::createInverseTBNMatrix(TVertex& aVertex0, const TVertex& aVertex1, 
+								   const TVertex& aVertex2)
 {
-	TVector3<float> v0v1 = aVertices[1] - aVertices[0];
-	TVector3<float> v0v2 = aVertices[2] - aVertices[0];
+	TVector3<float> v0v1 = aVertex1.iPosition - aVertex0.iPosition;
+	TVector3<float> v0v2 = aVertex2.iPosition - aVertex0.iPosition;
 
-	float c0c1_T = aTextureCoordinates[1].x() - aTextureCoordinates[0].x();
-	float c0c1_B = aTextureCoordinates[1].y() - aTextureCoordinates[0].y();
+	float c0c1_T = aVertex1.iTexCoord.x() - aVertex0.iTexCoord.x();
+	float c0c1_B = aVertex1.iTexCoord.y() - aVertex0.iTexCoord.y();
 
-	float c0c2_T = aTextureCoordinates[2].x() - aTextureCoordinates[0].x();
-	float c0c2_B = aTextureCoordinates[2].y() - aTextureCoordinates[0].y();
+	float c0c2_T = aVertex2.iTexCoord.x() - aVertex0.iTexCoord.x();
+	float c0c2_B = aVertex2.iTexCoord.y() - aVertex0.iTexCoord.y();
 
-	float denominator = c0c1_T*c0c2_B-c0c2_T*c0c1_B;
+	float determinant = c0c1_T*c0c2_B - c0c2_T*c0c1_B;
 
-	if ( ROUNDOFF(denominator) )
+	// if its very close to zero, create an orthogonal system by hand
+	if ( biasToZero(determinant) )
 	{
-		aInverseTangent = TVector3<float>(1.0f, 0.0f, 0.0f);
-		aInverseBinormal= TVector3<float>(0.0f, 1.0f, 0.0f);
-		aInverseNormal  = TVector3<float>(0.0f, 0.0f, 1.0f);
+		aVertex0.iTangent.set(	1.0f, 0.0f, 0.0f);
+		aVertex0.iBinormal.set(	0.0f, 1.0f, 0.0f);
+		aVertex0.iNormal.set(	0.0f, 0.0f, 1.0f);
 	}
 	else
 	{
-		float fScale1=1.0f/denominator;
+		float invDeterminant1 = 1.0f / determinant;
 
-		TVector3<float> T = TVector3<float>( (c0c2_B  * v0v1.x() - c0c1_B * v0v2.x()) * fScale1,
-			(c0c2_B  * v0v1.y() - c0c1_B * v0v2.y()) * fScale1,
-			(c0c2_B  * v0v1.z() - c0c1_B * v0v2.z()) * fScale1 );
+		TVector3<float> T = TVector3<float>( 
+			(c0c2_B  * v0v1.x() - c0c1_B * v0v2.x()) * invDeterminant1,
+			(c0c2_B  * v0v1.y() - c0c1_B * v0v2.y()) * invDeterminant1,
+			(c0c2_B  * v0v1.z() - c0c1_B * v0v2.z()) * invDeterminant1 );
 
-		TVector3<float> B = TVector3<float>( (-c0c2_T * v0v1.x() + c0c1_T * v0v2.x()) * fScale1,
-			(-c0c2_T * v0v1.y() + c0c1_T * v0v2.y()) * fScale1,
-			(-c0c2_T * v0v1.z() + c0c1_T * v0v2.z()) * fScale1 );
+		TVector3<float> B = TVector3<float>( 
+			(c0c1_T * v0v2.x() - c0c2_T * v0v1.x()) * invDeterminant1,
+			(c0c1_T * v0v2.y() - c0c2_T * v0v1.y()) * invDeterminant1,
+			(c0c1_T * v0v2.z() - c0c2_T * v0v1.z()) * invDeterminant1 );
 
 		TVector3<float> N = T^B;
 
-		float fScale2 = 1.0f / ( (T.x() * B.y() * N.z() - T.z() * B.y() * N.x()) +
+		float invDeterminant2 = 1.0f / ( 
+			(T.x() * B.y() * N.z() - T.z() * B.y() * N.x()) +
 			(B.x() * N.y() * T.z() - B.z() * N.y() * T.x()) +
 			(N.x() * T.y() * B.z() - N.z() * T.y() * B.x()) );
 
-		aInverseTangent.set(  (B^N).x() * fScale2,
-			((-N)^T).x() * fScale2,
-			(T^B).x() * fScale2 );
+		// In these three cases 
 
-		aInverseBinormal.set( ((-B)^N).y() * fScale2,
-			(N^T).y() * fScale2,
-			((-T)^N).y() * fScale2 );
+		aVertex0.iTangent.set(  
+			(B^N).x() * invDeterminant2,
+			((-N)^T).x() * invDeterminant2,
+			(T^B).x() * invDeterminant2 );
 
-		aInverseNormal.set(   (B^N).z() * fScale2,
-			((-N)^T).z() * fScale2,
-			(T^B).z() * fScale2 );
+		aVertex0.iBinormal.set( 
+			((-B)^N).y() * invDeterminant2,
+			(N^T).y() * invDeterminant2,
+			((-T)^B).y() * invDeterminant2 );
+
+		aVertex0.iNormal.set( 
+			(B^N).z() * invDeterminant2,
+			((-N)^T).z() * invDeterminant2,
+			(T^B).z() * invDeterminant2 );
 	}
 }

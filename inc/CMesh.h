@@ -11,6 +11,7 @@ class CMesh;
  */
 class TTriangleIterator
 {
+public:
 	TTriangleIterator(CMesh* aMesh);
 	bool getNextTriangle(GLuint* aIndices);
 
@@ -37,11 +38,15 @@ public:
 
 	void setBinormalLocation(GLuint aLocation);
 	void setTangentLocation(GLuint aLocation);
+
+	void createInverseTBNMatrices();
   
 	//PRIVATE METHODS
 private:
-	void CreateInverseTBNMatrix(const TVector3<float> aVertices[3], const TVector2<float> aTextureCoordinates[3],
-                              TVector3<float>& aInverseNormal, TVector3<float>& aInverseBinormal, TVector3<float>& aInverseTangent);
+	void createInverseTBNMatrix(TVertex& aVertex0, const TVertex& aVertex1, 
+		const TVertex& aVertex2);
+
+	bool biasToZero(float& aValue);
 
   //PUBLIC VARIABLES
 public:
@@ -126,4 +131,21 @@ void CMesh::addTriangleIndices(const int& aIndex1, const int& aIndex2, const int
 	this->iIndices.push_back( aIndex3 );
 
 	this->iIndicesCount+=3;
+}
+
+/**
+ * @description bias the value if it is between [-0.001f, 0.001f]
+ * @param aValue the value to be eventually biased
+ * @return true if the value was biased to zero; false otherwise
+ */
+inline
+bool CMesh::biasToZero(float& aValue)
+{
+	if ( fabs( aValue ) < 0.001f )
+	{
+		aValue = 0.0f;
+		return true;	
+	}
+	
+	return false;
 }
