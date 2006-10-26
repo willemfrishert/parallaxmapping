@@ -86,6 +86,8 @@ void CMyRenderer::CreateScene()
 	Load3ds modelLoader;
 	
 	this->mesh = modelLoader.Create("3ds/torus.3ds");
+
+	this->mesh->createInverseTBNMatrices();
 }
 
 
