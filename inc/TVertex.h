@@ -1,3 +1,12 @@
+/**
+ * @description NOTE: the iNormal, iBinormal and iTangent can be used either
+ * to store the normal, binormal and tangent, or the inverse normal, inverse binormal
+ * and inverse tangent. This will, of course, depend on the mapping technique we're
+ * using.
+ * 
+ * @file TVertex.h
+ * @author João Pedro Jorge
+ */
 #pragma once
 
 #include "TVector3.h"
