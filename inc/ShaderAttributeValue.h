@@ -16,7 +16,7 @@ public:
 	ShaderAttributeValue(void);
 	virtual ~ShaderAttributeValue(void);
 
-	void setValue(char* name, T value);
+	void setValue(T value);
 	
 	virtual void use() const;
 
@@ -28,36 +28,32 @@ private:
 template <class T>
 ShaderAttributeValue<T>::ShaderAttributeValue(void)
 {
-	this->name = NULL;
-	this->location = -1;
 }
 
 template <class T>
 ShaderAttributeValue<T>::~ShaderAttributeValue(void)
 {
-	free( this->name );
 }
 
 /**
-* @param name the uniform attribute name
-* @param value the attribute value
-*/
+ * @param value the attribute value
+ */
 template <class T>
-void ShaderAttributeValue<T>::setValue(char* name, T value)
+void ShaderAttributeValue<T>::setValue(T value)
 {
 	this->value = value;
-	size_t len = strlen(name) + 1;
-	this->name = (char*) malloc(sizeof(char) * len);
-#ifdef WIN32
-	strcpy_s(this->name, len, name);
-#else
-	strcpy(this->name, len, name);
-#endif
+
+	// NOTE: we must call the upper class and MARK the
+	// value as CHANGED
+	this->setHasChanged( true );
 }
 
 template <class T>
 void ShaderAttributeValue<T>::use() const
 {
-	setUniform(this->location, this->value);
+	if ( this->getHasChanged() )
+	{
+		setUniform(this->location, this->value);
+	}
 }
 

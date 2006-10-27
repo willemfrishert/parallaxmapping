@@ -8,8 +8,10 @@
 #include "ExtensionsLoader.h"
 
 ShaderAttributeObject::ShaderAttributeObject(void)
+: hasChanged( true )
 {
-
+	this->name = NULL;
+	this->location = -1;
 }
 
 ShaderAttributeObject::~ShaderAttributeObject(void)
@@ -52,13 +54,30 @@ int ShaderAttributeObject::assignLocation(GLuint shaderProgram)
 }
 
 /**
+* @param name the uniform attribute name
+*/
+void ShaderAttributeObject::setName(char* name)
+{
+	size_t len = strlen(name) + 1;
+	this->name = (char*) malloc(sizeof(char) * len);
+#ifdef WIN32
+	strcpy_s(this->name, len, name);
+#else
+	strcpy(this->name, len, name);
+#endif
+}
+
+/**
  * @param location openGL variable location
  * @param value the value
  * @param count the number of elements
  */
-void ShaderAttributeObject::setUniform(GLint location, float value) const
+void ShaderAttributeObject::setUniform(GLint location, float value)
 {
 	glUniform1f(location, value);
+
+	// mark it as not changed because it has been registered now
+	this->setHasChanged( false );
 }
 
 /**
@@ -66,9 +85,12 @@ void ShaderAttributeObject::setUniform(GLint location, float value) const
  * @param value the value
  * @param count the number of elements
  */
-void ShaderAttributeObject::setUniform(GLint location, int value) const
+void ShaderAttributeObject::setUniform(GLint location, int value)
 {
 	glUniform1i(location, value);
+
+	// mark it as not changed because it has been registered now
+	this->setHasChanged( false );
 }
 
 /**
@@ -76,7 +98,7 @@ void ShaderAttributeObject::setUniform(GLint location, int value) const
  * @param value the value
  * @param count the number of elements
  */
-void ShaderAttributeObject::setUniform(GLint location, float* value, int count) const
+void ShaderAttributeObject::setUniform(GLint location, float* value, int count)
 {
 	if ( count == 3 )
 	{
@@ -88,6 +110,9 @@ void ShaderAttributeObject::setUniform(GLint location, float* value, int count) 
 	{
 		glUniform1fv(location, count, value);
 	}
+
+	// mark it as not changed because it has been registered now
+	this->setHasChanged( false );
 }
 
 /**
@@ -95,7 +120,7 @@ void ShaderAttributeObject::setUniform(GLint location, float* value, int count) 
  * @param value the value
  * @param count the number of elements
  */
-void ShaderAttributeObject::setUniform(GLint location, GLint* value, GLsizei count ) const
+void ShaderAttributeObject::setUniform(GLint location, GLint* value, GLsizei count )
 {
 	if ( count == 3 )
 	{
@@ -107,4 +132,7 @@ void ShaderAttributeObject::setUniform(GLint location, GLint* value, GLsizei cou
 	{
 		glUniform1iv(location, count, value);
 	}
+
+	// mark it as not changed because it has been registered now
+	this->setHasChanged( false );
 }
