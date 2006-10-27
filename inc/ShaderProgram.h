@@ -3,6 +3,7 @@
 #include <list>
 
 class ShaderObject;
+class ShaderUniformObject;
 class ShaderAttributeObject;
 
 using namespace std;
@@ -15,7 +16,9 @@ public:
 
 	void attachShader(const ShaderObject& obj);
 
-	void addUniformObject(ShaderAttributeObject* obj);
+	void addUniformObject(ShaderUniformObject* obj);
+
+	void addAttributeObject(ShaderAttributeObject* obj);
 
 	void buildProgram();
 
@@ -29,5 +32,6 @@ private:
 	GLuint program;
 	GLint shadersLinked;
 
-	list< ShaderAttributeObject* > uniformObjects;
+	list< ShaderUniformObject* > uniformObjects;
+	list< ShaderAttributeObject* > attributeObjects;
 };
