@@ -1,5 +1,7 @@
 //INCLUDES
 #include "CMyRenderer.h"
+#include "ShaderAttributeObject.h"
+#include "ShaderUniformValue.h"
 #include "TVertex.h"
 #include "3ds.h"
 #include "tga.h"
@@ -25,6 +27,10 @@ CMyRenderer* CMyRenderer::iCurrentRenderer = 0;
 float angle = 0;
 GLuint textureId = 0;
 GLuint bumpMapId = 0;
+ShaderAttributeObject* tangentAttributeObject = NULL;
+ShaderAttributeObject* binormaltAttributeObject = NULL;
+ShaderUniformValue<int> textureUniformObject;
+ShaderUniformValue<int> bumpMapUniformObject;
 
 //CONSTRUCTORS
 //
@@ -56,7 +62,30 @@ void CMyRenderer::InitShaders()
 	iShaderProgram->attachShader( *iVertexShader);
 	iShaderProgram->attachShader( *iFragmentShader );
 
+	tangentAttributeObject = new ShaderAttributeObject("tangent");
+	binormaltAttributeObject = new ShaderAttributeObject("binormal");
+
+	//textureUniformObject = new ShaderUniformValue<int>();
+	//textureUniformObject.setName("decalTex");
+	//textureUniformObject.setValue( 0 );
+	
+	//bumpMapUniformObject = new ShaderUniformValue<int>();
+	//bumpMapUniformObject.setName("bumpTex");
+	//bumpMapUniformObject.setValue( 1 );
+
+	iShaderProgram->addAttributeObject( tangentAttributeObject );
+	iShaderProgram->addAttributeObject( binormaltAttributeObject );
+	//iShaderProgram->addUniformObject( &textureUniformObject );
+	//iShaderProgram->addUniformObject( &bumpMapUniformObject );
+
 	iShaderProgram->buildProgram();
+
+	// initialize multitexturing
+	glActiveTexture(GL_TEXTURE0 );
+	glBindTexture(GL_TEXTURE_2D, textureId);
+
+	glActiveTexture(GL_TEXTURE1 );
+	glBindTexture(GL_TEXTURE_2D, bumpMapId);
 }
 
 //
@@ -72,6 +101,8 @@ void CMyRenderer::InitMain()
 
 	textureId = loadTGATexture("textures/bricks.tga");
 	bumpMapId = loadTGATexture("textures/bricks_bump.tga");
+
+	InitShaders();
 }
 
 
@@ -88,6 +119,9 @@ void CMyRenderer::CreateScene()
 	this->mesh = modelLoader.Create("3ds/torus.3ds");
 
 	this->mesh->createInverseTBNMatrices();
+
+	this->mesh->setBinormalAttributeObject( binormaltAttributeObject );
+	this->mesh->setTangentAttributeObject( tangentAttributeObject );
 }
 
 
@@ -173,6 +207,8 @@ void CMyRenderer::RenderScene()
 
 	DrawText();
 
+	iShaderProgram->useProgram();
+
 	//glPolygonMode ( GL_FRONT, GL_FILL );
 	//glPointSize( 2.0f );
 	//glDisable(GL_LIGHTING);
@@ -197,7 +233,7 @@ void CMyRenderer::RenderScene()
 
 	glPushMatrix();
 	glTranslatef(0, 0, -15);
-	glRotatef(angle, 0, 1, 0);
+	//glRotatef(angle, 0, 1, 0);
 	glScalef(0.1f, 0.1f, 0.1f);
 	this->mesh->draw();
 	glPopMatrix();
@@ -207,6 +243,8 @@ void CMyRenderer::RenderScene()
 	{
 		angle -= 360;
 	}
+
+	iShaderProgram->disableProgram();
 
 	glutSwapBuffers();
 }
