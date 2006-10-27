@@ -18,7 +18,7 @@ public:
 
 	void setValue(T value);
 	
-	virtual void use() const;
+	virtual void use();
 
 	// attributes
 private:
@@ -49,7 +49,7 @@ void ShaderUniformValue<T>::setValue(T value)
 }
 
 template <class T>
-void ShaderUniformValue<T>::use() const
+void ShaderUniformValue<T>::use()
 {
 	if ( this->getHasChanged() )
 	{

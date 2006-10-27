@@ -13,7 +13,7 @@ public:
 	 * binds the value to the location in memory.
 	 * Equivalent to a glUniform* call
 	 */
-	virtual void use() const = 0;
+	virtual void use() = 0;
 
 	void setName(char* name);
 

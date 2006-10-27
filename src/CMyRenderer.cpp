@@ -2,6 +2,7 @@
 #include "CMyRenderer.h"
 #include "ShaderAttributeObject.h"
 #include "ShaderUniformValue.h"
+#include "ShaderUniformVector.h"
 #include "TVertex.h"
 #include "3ds.h"
 #include "tga.h"
@@ -66,17 +67,17 @@ void CMyRenderer::InitShaders()
 	binormaltAttributeObject = new ShaderAttributeObject("binormal");
 
 	//textureUniformObject = new ShaderUniformValue<int>();
-	//textureUniformObject.setName("decalTex");
-	//textureUniformObject.setValue( 0 );
+	textureUniformObject.setName("decalTex");
+	textureUniformObject.setValue( 0 );
 	
 	//bumpMapUniformObject = new ShaderUniformValue<int>();
-	//bumpMapUniformObject.setName("bumpTex");
-	//bumpMapUniformObject.setValue( 1 );
+	bumpMapUniformObject.setName("bumpTex");
+	bumpMapUniformObject.setValue( 1 );
 
 	iShaderProgram->addAttributeObject( tangentAttributeObject );
 	iShaderProgram->addAttributeObject( binormaltAttributeObject );
-	//iShaderProgram->addUniformObject( &textureUniformObject );
-	//iShaderProgram->addUniformObject( &bumpMapUniformObject );
+	iShaderProgram->addUniformObject( &textureUniformObject );
+	iShaderProgram->addUniformObject( &bumpMapUniformObject );
 
 	iShaderProgram->buildProgram();
 
@@ -229,7 +230,7 @@ void CMyRenderer::RenderScene()
 
 	//glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, bumpMapId);
+	//glBindTexture(GL_TEXTURE_2D, bumpMapId);
 
 	glPushMatrix();
 	glTranslatef(0, 0, -15);

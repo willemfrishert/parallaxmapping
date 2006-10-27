@@ -13,7 +13,7 @@ void main()
 	gl_Position = ftransform(); 
 	
 	//Construct a 3x3 matrix from the geometry’s inverse tangent, binormal, and normal
-	mat3 rotmat = mat3(tangent,binormal,gl_Normal);
+	mat3 rotmat = mat3(tangent, binormal, gl_Normal);
 	
 	//Rotate the light into tangent space
 	lightDir = rotmat * normalize(gl_LightSource[0].position.xyz);
