@@ -4,6 +4,7 @@
 #include "TVertex.h"
 
 class CMesh;
+class ShaderAttributeObject;
 
 /**
  * @description Convenience class to iterate through the triangles
@@ -36,8 +37,8 @@ public:
 	int getIndicesCount() const;
 	void getTriangleIndices(const GLuint* aTriangleIndices, GLuint* aVertexIndices) const;
 
-	void setBinormalLocation(GLuint aLocation);
-	void setTangentLocation(GLuint aLocation);
+	void setBinormalAttributeObject(ShaderAttributeObject* aBinormal);
+	void setTangentAttributeObject(ShaderAttributeObject* aTangent);
 
 	void createInverseTBNMatrices();
   
@@ -61,8 +62,8 @@ private:
 	 * The vertex attributes shader location, 
 	 * for tangent and binormal
 	 */
-	GLuint iVertexTangentLoc;
-	GLuint iVertexBinormalLoc;
+	ShaderAttributeObject* iVertexTangentAttribObject;
+	ShaderAttributeObject* iVertexBinormalAttribObject;
 };
 
 /**

@@ -1,7 +1,10 @@
+#include "ShaderAttributeObject.h"
 #include "CMesh.h"
 
 CMesh::CMesh()
 : iIndicesCount( 0 )
+, iVertexBinormalAttribObject( NULL )
+, iVertexTangentAttribObject( NULL )
 {
 }
 
@@ -13,18 +16,18 @@ CMesh::~CMesh(void)
  * @param aLocation
  * @description sets the binormal location on the shader
  */
-void CMesh::setBinormalLocation(GLuint aLocation)
+void CMesh::setBinormalAttributeObject(ShaderAttributeObject* aBinormal)
 {
-	this->iVertexBinormalLoc = aLocation;
+	this->iVertexBinormalAttribObject = aBinormal;
 }
 
 /**
  * @param aLocation
  * @description sets the tangent location on the shader
  */
-void CMesh::setTangentLocation(GLuint aLocation)
+void CMesh::setTangentAttributeObject(ShaderAttributeObject* aTangent)
 {
-	this->iVertexTangentLoc = aLocation;
+	this->iVertexTangentAttribObject = aTangent;
 }
 
 /**
@@ -38,25 +41,28 @@ void CMesh::draw()
 	glEnableClientState( GL_NORMAL_ARRAY );
 	glEnableClientState( GL_TEXTURE_COORD_ARRAY );  
 	
+	assert( this->iVertexTangentAttribObject );
+	assert( this->iVertexBinormalAttribObject );
+
 	// Enable special attributes: Tangent and Binormal arrays
-	//glEnableVertexAttribArray( this->iVertexTangentLoc );
-	//glEnableVertexAttribArray( this->iVertexBinormalLoc );
+	glEnableVertexAttribArray( this->iVertexTangentAttribObject->getIndex() );
+	glEnableVertexAttribArray( this->iVertexBinormalAttribObject->getIndex() );
 	
 	// Passing the information to openGL using pointers to the actual arrays
 	glVertexPointer( 3, GL_FLOAT, sizeof(TVertex), &(this->iVertices[0].iPosition.x()) );
 	glNormalPointer( GL_FLOAT, sizeof(TVertex), &(this->iVertices[0].iNormal.x()) );
 	glTexCoordPointer( 2, GL_FLOAT, sizeof(TVertex), &(this->iVertices[0].iTexCoord.x()));
 
-	//glVertexAttribPointer(this->iVertexTangentLoc, 3, GL_FLOAT, 0, sizeof(TVertex), 
-	//	&(this->iVertices[0].iTangent));
-	//glVertexAttribPointer(this->iVertexBinormalLoc, 3, GL_FLOAT, 0, sizeof(TVertex), 
-	//	&(this->iVertices[0].iTangent));
+	glVertexAttribPointer(this->iVertexTangentAttribObject->getIndex(), 3, GL_FLOAT, 0, sizeof(TVertex), 
+		&(this->iVertices[0].iTangent.x()));
+	glVertexAttribPointer(this->iVertexBinormalAttribObject->getIndex(), 3, GL_FLOAT, 0, sizeof(TVertex), 
+		&(this->iVertices[0].iBinormal.x()));
 
 	// the actual drawing
 	glDrawElements(GL_TRIANGLES, this->iIndicesCount, GL_UNSIGNED_INT, &(this->iIndices.front()));
 
-	//glDisableVertexAttribArray( this->iVertexBinormalLoc );
-	//glDisableVertexAttribArray( this->iVertexTangentLoc );
+	glDisableVertexAttribArray( this->iVertexTangentAttribObject->getIndex() );
+	glDisableVertexAttribArray( this->iVertexBinormalAttribObject->getIndex() );
 	glDisableClientState( GL_VERTEX_ARRAY );	
 	glDisableClientState( GL_NORMAL_ARRAY );	
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
