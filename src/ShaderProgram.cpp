@@ -4,6 +4,7 @@
 #endif
 
 #include "ShaderObject.h"
+#include "ShaderUniformObject.h"
 #include "ShaderAttributeObject.h"
 #include "ShaderProgram.h"
 #include "ExtensionsLoader.h"
@@ -25,9 +26,14 @@ void ShaderProgram::attachShader(const ShaderObject& obj)
 	glAttachShader( this->program, obj.getShaderId() );
 }
 
-void ShaderProgram::addUniformObject(ShaderAttributeObject* obj)
+void ShaderProgram::addUniformObject(ShaderUniformObject* obj)
 {
 	this->uniformObjects.push_back( obj );
+}
+
+void ShaderProgram::addAttributeObject(ShaderAttributeObject* obj)
+{
+	this->attributeObjects.push_back( obj );
 }
 
 /**
@@ -48,10 +54,18 @@ void ShaderProgram::buildProgram()
 	}
 	else
 	{
-		list< ShaderAttributeObject* >::iterator it = this->uniformObjects.begin();
+		// get the locations for the uniform objects
+		list< ShaderUniformObject* >::iterator it = this->uniformObjects.begin();
 		for (; it != this->uniformObjects.end(); it++)
 		{
 			(*it)->assignLocation( this->program );
+		}
+
+		// get the locations for the attribute objects
+		list< ShaderAttributeObject* >::iterator attribtIter = this->attributeObjects.begin();
+		for (; attribtIter != this->attributeObjects.end(); attribtIter++)
+		{
+			(*attribtIter)->assignLocation( this->program );
 		}
 	}
 }
@@ -74,7 +88,7 @@ void ShaderProgram::useProgram()
  */
 void ShaderProgram::updateProgramUniformObjects()
 {
-	list< ShaderAttributeObject* >::const_iterator uniformIter = this->uniformObjects.begin();
+	list< ShaderUniformObject* >::const_iterator uniformIter = this->uniformObjects.begin();
 
 	for (; uniformIter != this->uniformObjects.end() ; uniformIter++)
 	{
