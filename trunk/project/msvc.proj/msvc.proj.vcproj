@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\ShaderUniformObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\tga.cpp"
 				>
 			</File>
@@ -255,19 +259,23 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\inc\ShaderAttributeValue.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\inc\ShaderAttributeVector.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\inc\ShaderObject.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\inc\ShaderProgram.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderUniformObject.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderUniformValue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\ShaderUniformVector.h"
 				>
 			</File>
 			<File
