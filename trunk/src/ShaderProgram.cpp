@@ -27,15 +27,12 @@ void ShaderProgram::attachShader(const ShaderObject& obj)
 
 void ShaderProgram::addUniformObject(ShaderAttributeObject* obj)
 {
-	//int status = obj->assignLocation( this->program );
-
-	//if (status != -1)
-	{
-		this->uniformObjects.push_back( obj );
-	}
+	this->uniformObjects.push_back( obj );
 }
 
 /**
+ * @description links the program and assigns all the necessary locations for
+ * the uniform objects connected to it.
  */
 void ShaderProgram::buildProgram()
 {
@@ -60,11 +57,23 @@ void ShaderProgram::buildProgram()
 }
 
 /**
+ * @description sets this program to be used as the current shader and 
+ * updates all the uniform objects (connected to this program)
+ * that need to be updated (i.e., that have been changed since the last call)
  */
 void ShaderProgram::useProgram()
 {
 	glUseProgram( this->program );
 
+	updateProgramUniformObjects();	
+}
+
+/**
+ * @description updates all the uniform objects (connected to this program)
+ * that need to be updated (i.e., that have been changed since the last call)
+ */
+void ShaderProgram::updateProgramUniformObjects()
+{
 	list< ShaderAttributeObject* >::const_iterator uniformIter = this->uniformObjects.begin();
 
 	for (; uniformIter != this->uniformObjects.end() ; uniformIter++)

@@ -23,6 +23,8 @@ public:
 
 	void disableProgram();
 
+	void updateProgramUniformObjects();
+
 private:
 	GLuint program;
 	GLint shadersLinked;
