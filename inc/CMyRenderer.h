@@ -5,6 +5,10 @@
 #include "CMesh.h"
 #include "ShaderObject.h"
 #include "ShaderProgram.h"
+#include "ShaderAttributeObject.h"
+#include "ShaderUniformObject.h"
+#include "ShaderUniformValue.h"
+#include "ShaderUniformVector.h"
 
 
 //CONSTANTS:
@@ -109,6 +113,14 @@ private:
 	ShaderProgram* iShaderProgram;
 	ShaderObject* iVertexShader;
 	ShaderObject* iFragmentShader;
+	
+	float angle;
+	GLuint textureId;
+	GLuint bumpMapId;
+	ShaderAttributeObject* tangentAttributeObject;
+	ShaderAttributeObject* binormaltAttributeObject;
+	ShaderUniformValue<int>* textureUniformObject;
+	ShaderUniformValue<int>* bumpMapUniformObject;	
 };
 
 

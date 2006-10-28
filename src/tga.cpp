@@ -38,28 +38,8 @@
 #include <GL/glu.h>
 #endif
 
-/* texture id for exemple */
+/* texture id for example */
 GLuint texId = 0;
-
-#ifdef __APPLE__
-short SwapTwoBytes(short w)
-	{
-	short tmp;
-	tmp =  (w & 0x00FF);
-	tmp = ((w & 0xFF00) >> 0x08) | (tmp << 0x08);
-	return(tmp);
-	}
-
-int SwapFourBytes(int dw)
-	{
-	int tmp;
-	tmp =  (dw & 0x000000FF);
-	tmp = ((dw & 0x0000FF00) >> 0x08) | (tmp << 0x08);
-	tmp = ((dw & 0x00FF0000) >> 0x10) | (tmp << 0x08);
-	tmp = ((dw & 0xFF000000) >> 0x18) | (tmp << 0x08);
-	return(tmp);
-	}
-#endif
 
 void
 GetTextureInfo (tga_header_t *header, gl_texture_t *texinfo)
@@ -460,13 +440,13 @@ ReadTGAFile (const char *filename)
   /* read header */
   fread (&header, sizeof (tga_header_t), 1, fp);
 	
-#ifdef __APPLE__
-	header.cm_first_entry = SwapTwoBytes( header.cm_first_entry );
-	header.cm_length      = SwapTwoBytes( header.cm_length );
-	header.x_origin       = SwapTwoBytes( header.x_origin );
-	header.y_origin       = SwapTwoBytes( header.y_origin );
-	header.width          = SwapTwoBytes( header.width );
-	header.height         = SwapTwoBytes( header.height );
+#ifdef __BIG_ENDIAN__
+	header.cm_first_entry = OSReadSwapInt16( &header.cm_first_entry, 0 );
+	header.cm_length      = OSReadSwapInt16( &header.cm_length, 0 );
+	header.x_origin       = OSReadSwapInt16( &header.x_origin, 0 );
+	header.y_origin       = OSReadSwapInt16( &header.y_origin, 0 );
+	header.width          = OSReadSwapInt16( &header.width, 0 );
+	header.height         = OSReadSwapInt16( &header.height, 0 );
 #endif
 	
 

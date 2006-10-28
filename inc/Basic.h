@@ -33,8 +33,10 @@
 #elif defined _WIN32
 #include <GL/glew.h>
 #include <GL/glut.h>    // Header File For The GLUT Library
+#endif
 
-const float pi ( 3.1415926535897932384626433832795f );	///< pi
+#ifndef M_PI
+#define M_PI 3.14159265358979323846264338327950288   /* pi */
 #endif
 
 using namespace std;  // no need for std::cout etc.
