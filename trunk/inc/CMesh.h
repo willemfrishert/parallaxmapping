@@ -2,6 +2,7 @@
 
 #include "Basic.h"
 #include "TVertex.h"
+#include "ShaderAttributeObject.h"
 
 class CMesh;
 class ShaderAttributeObject;

@@ -1,8 +1,5 @@
 //INCLUDES
 #include "CMyRenderer.h"
-#include "ShaderAttributeObject.h"
-#include "ShaderUniformValue.h"
-#include "ShaderUniformVector.h"
 #include "TVertex.h"
 #include "3ds.h"
 #include "tga.h"
@@ -25,14 +22,6 @@ const float KZFar	= 600.0f;
 //INIT STATIC DATA
 CMyRenderer* CMyRenderer::iCurrentRenderer = 0;
 
-float angle = 0;
-GLuint textureId = 0;
-GLuint bumpMapId = 0;
-ShaderAttributeObject* tangentAttributeObject = NULL;
-ShaderAttributeObject* binormaltAttributeObject = NULL;
-ShaderUniformValue<int> textureUniformObject;
-ShaderUniformValue<int> bumpMapUniformObject;
-
 //CONSTRUCTORS
 //
 //Default constructor
@@ -40,6 +29,13 @@ CMyRenderer::CMyRenderer()
 : iFrame(0)
 , iPreviousFrame(0)
 , iPreviousTime(0)
+, angle(0)
+, textureId(0)
+, bumpMapId(0)
+, tangentAttributeObject(0)
+, binormaltAttributeObject(NULL)
+, textureUniformObject(NULL)
+, bumpMapUniformObject(NULL)	
 {
 	InitMain();
 	CMyRenderer::iCurrentRenderer = this;
@@ -66,18 +62,18 @@ void CMyRenderer::InitShaders()
 	tangentAttributeObject = new ShaderAttributeObject("tangent");
 	binormaltAttributeObject = new ShaderAttributeObject("binormal");
 
-	//textureUniformObject = new ShaderUniformValue<int>();
-	textureUniformObject.setName("decalTex");
-	textureUniformObject.setValue( 0 );
+	textureUniformObject = new ShaderUniformValue<int>();
+	textureUniformObject->setName("decalTex");
+	textureUniformObject->setValue( 0 );
 	
-	//bumpMapUniformObject = new ShaderUniformValue<int>();
-	bumpMapUniformObject.setName("bumpTex");
-	bumpMapUniformObject.setValue( 1 );
+	bumpMapUniformObject = new ShaderUniformValue<int>();
+	bumpMapUniformObject->setName("bumpTex");
+	bumpMapUniformObject->setValue( 1 );
 
 	iShaderProgram->addAttributeObject( tangentAttributeObject );
 	iShaderProgram->addAttributeObject( binormaltAttributeObject );
-	iShaderProgram->addUniformObject( &textureUniformObject );
-	iShaderProgram->addUniformObject( &bumpMapUniformObject );
+	iShaderProgram->addUniformObject( textureUniformObject );
+	iShaderProgram->addUniformObject( bumpMapUniformObject );
 
 	iShaderProgram->buildProgram();
 

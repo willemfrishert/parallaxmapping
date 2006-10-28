@@ -63,7 +63,7 @@ void ShaderUniformObject::setName(char* name)
 #ifdef WIN32
 	strcpy_s(this->name, len, name);
 #else
-	strcpy(this->name, len, name);
+	strncpy(this->name, name, len);
 #endif
 }
 

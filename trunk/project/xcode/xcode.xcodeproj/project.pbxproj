@@ -13,7 +13,6 @@
 		4385DD8D0AF012E700039AED /* CMyUiEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7A0AF012E700039AED /* CMyUiEvents.cpp */; };
 		4385DD8E0AF012E700039AED /* ExtensionsLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7B0AF012E700039AED /* ExtensionsLoader.cpp */; };
 		4385DD8F0AF012E700039AED /* Main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7C0AF012E700039AED /* Main.cpp */; };
-		4385DD900AF012E700039AED /* ShaderAttributeObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7D0AF012E700039AED /* ShaderAttributeObject.cpp */; };
 		4385DD910AF012E700039AED /* ShaderObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7E0AF012E700039AED /* ShaderObject.cpp */; };
 		4385DD920AF012E700039AED /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD7F0AF012E700039AED /* ShaderProgram.cpp */; };
 		4385DD930AF012E700039AED /* tga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4385DD800AF012E700039AED /* tga.cpp */; };
@@ -23,34 +22,20 @@
 		4385DE7E0AF03C0100039AED /* 3ds in Resources */ = {isa = PBXBuildFile; fileRef = 4385DE750AF03C0100039AED /* 3ds */; };
 		43ADFEF50AF00EF400189F6C /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADFEF30AF00EF400189F6C /* GLUT.framework */; };
 		43ADFEF60AF00EF400189F6C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADFEF40AF00EF400189F6C /* OpenGL.framework */; };
+		43F3747C0AF2CACA00F6F227 /* ShaderAttributeObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43F3747A0AF2CACA00F6F227 /* ShaderAttributeObject.cpp */; };
+		43F3747D0AF2CACA00F6F227 /* ShaderUniformObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43F3747B0AF2CACA00F6F227 /* ShaderUniformObject.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* xcode_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xcode_Prefix.pch; sourceTree = "<group>"; };
-		4385DD660AF012E700039AED /* 3ds.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = 3ds.h; sourceTree = "<group>"; };
-		4385DD670AF012E700039AED /* Basic.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Basic.h; sourceTree = "<group>"; };
-		4385DD680AF012E700039AED /* CMesh.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMesh.h; sourceTree = "<group>"; };
-		4385DD690AF012E700039AED /* CMyRenderer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMyRenderer.h; sourceTree = "<group>"; };
-		4385DD6A0AF012E700039AED /* CMyUiEvents.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMyUiEvents.h; sourceTree = "<group>"; };
-		4385DD6B0AF012E700039AED /* ExtensionsLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ExtensionsLoader.h; sourceTree = "<group>"; };
-		4385DD6C0AF012E700039AED /* ShaderAttributeObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeObject.h; sourceTree = "<group>"; };
-		4385DD6D0AF012E700039AED /* ShaderAttributeValue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeValue.h; sourceTree = "<group>"; };
-		4385DD6E0AF012E700039AED /* ShaderAttributeVector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeVector.h; sourceTree = "<group>"; };
-		4385DD6F0AF012E700039AED /* ShaderObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderObject.h; sourceTree = "<group>"; };
-		4385DD700AF012E700039AED /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
-		4385DD710AF012E700039AED /* tga.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tga.h; sourceTree = "<group>"; };
-		4385DD720AF012E700039AED /* TVector2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVector2.h; sourceTree = "<group>"; };
-		4385DD730AF012E700039AED /* TVector3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVector3.h; sourceTree = "<group>"; };
-		4385DD750AF012E700039AED /* TVertex.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVertex.h; sourceTree = "<group>"; };
 		4385DD770AF012E700039AED /* 3ds.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = 3ds.cpp; sourceTree = "<group>"; };
 		4385DD780AF012E700039AED /* CMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CMesh.cpp; sourceTree = "<group>"; };
 		4385DD790AF012E700039AED /* CMyRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CMyRenderer.cpp; sourceTree = "<group>"; };
 		4385DD7A0AF012E700039AED /* CMyUiEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CMyUiEvents.cpp; sourceTree = "<group>"; };
 		4385DD7B0AF012E700039AED /* ExtensionsLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ExtensionsLoader.cpp; sourceTree = "<group>"; };
 		4385DD7C0AF012E700039AED /* Main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Main.cpp; sourceTree = "<group>"; };
-		4385DD7D0AF012E700039AED /* ShaderAttributeObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderAttributeObject.cpp; sourceTree = "<group>"; };
 		4385DD7E0AF012E700039AED /* ShaderObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderObject.cpp; sourceTree = "<group>"; };
 		4385DD7F0AF012E700039AED /* ShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderProgram.cpp; sourceTree = "<group>"; };
 		4385DD800AF012E700039AED /* tga.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = tga.cpp; sourceTree = "<group>"; };
@@ -60,8 +45,26 @@
 		4385DE750AF03C0100039AED /* 3ds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = 3ds; path = ../../3ds; sourceTree = SOURCE_ROOT; };
 		43ADFEF30AF00EF400189F6C /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
 		43ADFEF40AF00EF400189F6C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		43EE7A050AF2C1F70073D4ED /* 3ds.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = 3ds.h; sourceTree = "<group>"; };
+		43EE7A060AF2C1F70073D4ED /* Basic.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Basic.h; sourceTree = "<group>"; };
+		43EE7A070AF2C1F70073D4ED /* CMesh.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMesh.h; sourceTree = "<group>"; };
+		43EE7A080AF2C1F70073D4ED /* CMyRenderer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMyRenderer.h; sourceTree = "<group>"; };
+		43EE7A090AF2C1F70073D4ED /* CMyUiEvents.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMyUiEvents.h; sourceTree = "<group>"; };
+		43EE7A0A0AF2C1F70073D4ED /* ExtensionsLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ExtensionsLoader.h; sourceTree = "<group>"; };
+		43EE7A0B0AF2C1F70073D4ED /* ShaderAttributeObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderAttributeObject.h; sourceTree = "<group>"; };
+		43EE7A0C0AF2C1F70073D4ED /* ShaderObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderObject.h; sourceTree = "<group>"; };
+		43EE7A0D0AF2C1F70073D4ED /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
+		43EE7A0E0AF2C1F70073D4ED /* ShaderUniformObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderUniformObject.h; sourceTree = "<group>"; };
+		43EE7A0F0AF2C1F70073D4ED /* ShaderUniformValue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderUniformValue.h; sourceTree = "<group>"; };
+		43EE7A100AF2C1F70073D4ED /* ShaderUniformVector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ShaderUniformVector.h; sourceTree = "<group>"; };
+		43EE7A110AF2C1F70073D4ED /* tga.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = tga.h; sourceTree = "<group>"; };
+		43EE7A120AF2C1F70073D4ED /* TVector2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVector2.h; sourceTree = "<group>"; };
+		43EE7A130AF2C1F70073D4ED /* TVector3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVector3.h; sourceTree = "<group>"; };
+		43EE7A140AF2C1F70073D4ED /* TVertex.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TVertex.h; sourceTree = "<group>"; };
+		43F3747A0AF2CACA00F6F227 /* ShaderAttributeObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderAttributeObject.cpp; sourceTree = "<group>"; };
+		43F3747B0AF2CACA00F6F227 /* ShaderUniformObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderUniformObject.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* parallaxmapping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = parallaxmapping.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* parallaxmapping.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = parallaxmapping.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,21 +124,22 @@
 		4385DD650AF012E700039AED /* inc */ = {
 			isa = PBXGroup;
 			children = (
-				4385DD660AF012E700039AED /* 3ds.h */,
-				4385DD670AF012E700039AED /* Basic.h */,
-				4385DD680AF012E700039AED /* CMesh.h */,
-				4385DD690AF012E700039AED /* CMyRenderer.h */,
-				4385DD6A0AF012E700039AED /* CMyUiEvents.h */,
-				4385DD6B0AF012E700039AED /* ExtensionsLoader.h */,
-				4385DD6C0AF012E700039AED /* ShaderAttributeObject.h */,
-				4385DD6D0AF012E700039AED /* ShaderAttributeValue.h */,
-				4385DD6E0AF012E700039AED /* ShaderAttributeVector.h */,
-				4385DD6F0AF012E700039AED /* ShaderObject.h */,
-				4385DD700AF012E700039AED /* ShaderProgram.h */,
-				4385DD710AF012E700039AED /* tga.h */,
-				4385DD720AF012E700039AED /* TVector2.h */,
-				4385DD730AF012E700039AED /* TVector3.h */,
-				4385DD750AF012E700039AED /* TVertex.h */,
+				43EE7A050AF2C1F70073D4ED /* 3ds.h */,
+				43EE7A060AF2C1F70073D4ED /* Basic.h */,
+				43EE7A070AF2C1F70073D4ED /* CMesh.h */,
+				43EE7A080AF2C1F70073D4ED /* CMyRenderer.h */,
+				43EE7A090AF2C1F70073D4ED /* CMyUiEvents.h */,
+				43EE7A0A0AF2C1F70073D4ED /* ExtensionsLoader.h */,
+				43EE7A0B0AF2C1F70073D4ED /* ShaderAttributeObject.h */,
+				43EE7A0C0AF2C1F70073D4ED /* ShaderObject.h */,
+				43EE7A0D0AF2C1F70073D4ED /* ShaderProgram.h */,
+				43EE7A0E0AF2C1F70073D4ED /* ShaderUniformObject.h */,
+				43EE7A0F0AF2C1F70073D4ED /* ShaderUniformValue.h */,
+				43EE7A100AF2C1F70073D4ED /* ShaderUniformVector.h */,
+				43EE7A110AF2C1F70073D4ED /* tga.h */,
+				43EE7A120AF2C1F70073D4ED /* TVector2.h */,
+				43EE7A130AF2C1F70073D4ED /* TVector3.h */,
+				43EE7A140AF2C1F70073D4ED /* TVertex.h */,
 			);
 			name = inc;
 			path = ../../inc;
@@ -150,9 +154,10 @@
 				4385DD7A0AF012E700039AED /* CMyUiEvents.cpp */,
 				4385DD7B0AF012E700039AED /* ExtensionsLoader.cpp */,
 				4385DD7C0AF012E700039AED /* Main.cpp */,
-				4385DD7D0AF012E700039AED /* ShaderAttributeObject.cpp */,
 				4385DD7E0AF012E700039AED /* ShaderObject.cpp */,
 				4385DD7F0AF012E700039AED /* ShaderProgram.cpp */,
+				43F3747A0AF2CACA00F6F227 /* ShaderAttributeObject.cpp */,
+				43F3747B0AF2CACA00F6F227 /* ShaderUniformObject.cpp */,
 				4385DD800AF012E700039AED /* tga.cpp */,
 				4385DD810AF012E700039AED /* TVertex.cpp */,
 			);
@@ -230,11 +235,12 @@
 				4385DD8D0AF012E700039AED /* CMyUiEvents.cpp in Sources */,
 				4385DD8E0AF012E700039AED /* ExtensionsLoader.cpp in Sources */,
 				4385DD8F0AF012E700039AED /* Main.cpp in Sources */,
-				4385DD900AF012E700039AED /* ShaderAttributeObject.cpp in Sources */,
 				4385DD910AF012E700039AED /* ShaderObject.cpp in Sources */,
 				4385DD920AF012E700039AED /* ShaderProgram.cpp in Sources */,
 				4385DD930AF012E700039AED /* tga.cpp in Sources */,
 				4385DD940AF012E700039AED /* TVertex.cpp in Sources */,
+				43F3747C0AF2CACA00F6F227 /* ShaderAttributeObject.cpp in Sources */,
+				43F3747D0AF2CACA00F6F227 /* ShaderUniformObject.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
