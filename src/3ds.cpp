@@ -442,11 +442,13 @@ int Load3ds::FillIndexBuffer(Chunk * aPreviousChunk)
 	mModelData->mFaceCount = OSReadSwapInt16(&mModelData->mFaceCount,0);
 #endif
 	aPreviousChunk->mBytesRead += numberOfBytesRead = fread(mBuffer, 1, aPreviousChunk->mLength - aPreviousChunk->mBytesRead, mFile);
-	
+
+#ifdef __BIG_ENDIAN__	
 	for (int i=0;i<mModelData->mFaceCount*4;++i)
 	{
 		static_cast<short *>(mBuffer)[i] = OSReadSwapInt16(&static_cast<short*>(mBuffer)[i],0);
 	}	
+#endif
 
 	// allocate space for the vertices in the temporary object, and read that information
 	// Each face has three indices, corresponding to each face vertex
