@@ -11,17 +11,18 @@ void main()
 	vec3 decalCol = vec3(texture2D(decalTex, gl_TexCoord[0].xy));
 	
 	//Expand the bump-map into a normalized unsigned vector float
-	//bumpNorm = (bumpNorm - 0.5) * 2.0;
+	bumpNorm = (bumpNorm - 0.5) * 2.0;
 	
 	//Find the dot product between the light direction and the normal
 	float NdotL = max(dot(bumpNorm, lightDir), 0.0);
 	
 	//Calculate the final color gl_FragColor
-	//vec3 diffuse = NdotL * passColor.xyz * decalCol;
+	// vec3 diffuse = NdotL * passColor.xyz * decalCol;
+	vec3 diffuse = NdotL * decalCol;
 	
 	//Set the color of the fragment...  If you want specular lighting or other types add it here
-	//gl_FragColor = vec4(diffuse, passColor.w);
+	gl_FragColor = vec4(diffuse, passColor.w);
 	
-	gl_FragColor = texture2D(decalTex, gl_TexCoord[0].xy);
+	//gl_FragColor = vec4(lightDir.xyz, 1.0);
 	
 }
