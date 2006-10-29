@@ -97,7 +97,7 @@ void CMyRenderer::InitMain()
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
 	textureId = loadTGATexture("textures/bricks.tga");
-	bumpMapId = loadTGATexture("textures/bricks_bump.tga");
+	bumpMapId = loadTGATexture("textures/bricks_scratchDOT3.tga");
 
 	InitShaders();
 }
@@ -113,7 +113,7 @@ void CMyRenderer::CreateScene()
 {
 	Load3ds modelLoader;
 	
-	this->mesh = modelLoader.Create("3ds/torus.3ds");
+	this->mesh = modelLoader.Create("3ds/plane.3ds");
 
 	this->mesh->createInverseTBNMatrices();
 
@@ -211,7 +211,7 @@ void CMyRenderer::RenderScene()
 	//glDisable(GL_LIGHTING);
 	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
 	GLfloat specular[4] = {1, 1, 1, 1.0};
-	GLfloat light_pos[4] = {0, 0, 1, 0};
+	GLfloat light_pos[4] = {0.0f, 0.5f, 0.5f, 0};
 	GLfloat shininess = 10;
 
 	// since we are scaling (in our particular case, uniform scaling) 
@@ -219,7 +219,10 @@ void CMyRenderer::RenderScene()
 	glEnable(GL_RESCALE_NORMAL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+	glPushMatrix();
+		glRotatef(angle, 0, 0, 1);
+		glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+	glPopMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 	//glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
 	//glMaterialf(GL_FRONT, GL_SHININESS, shininess);
@@ -229,13 +232,13 @@ void CMyRenderer::RenderScene()
 	//glBindTexture(GL_TEXTURE_2D, bumpMapId);
 
 	glPushMatrix();
-	glTranslatef(0, 0, -15);
+	glTranslatef(0, 0, -5);
 	//glRotatef(angle, 0, 1, 0);
 	glScalef(0.1f, 0.1f, 0.1f);
 	this->mesh->draw();
 	glPopMatrix();
 
-	angle += 0.5f;
+	angle += 1.5f;
 	if (angle > 360)
 	{
 		angle -= 360;
