@@ -149,10 +149,10 @@ public:
 	int* mFaces;
 
 	// the number of faces
-	int mFaceCount;
+	unsigned short mFaceCount;
 
 	// the number of vertices
-	int mVertexCount;
+	unsigned short mVertexCount;
 
 	// tells if the object contains or not texture coordinates
 	bool mContainsTexCoords;
