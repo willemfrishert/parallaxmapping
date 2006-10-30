@@ -39,6 +39,7 @@ public:
 	void getTriangleIndices(const GLuint* aTriangleIndices, GLuint* aVertexIndices) const;
 
 	void setBinormalAttributeObject(ShaderAttributeObject* aBinormal);
+	void setTBNNormalAttributeObject(ShaderAttributeObject* aTBNNormal);
 	void setTangentAttributeObject(ShaderAttributeObject* aTangent);
 
 	void createInverseTBNMatrices();
@@ -61,9 +62,10 @@ private:
 	
 	/**
 	 * The vertex attributes shader location, 
-	 * for tangent and binormal
+	 * for tangent, normal  and binormal (all in Tangent space)
 	 */
 	ShaderAttributeObject* iVertexTangentAttribObject;
+	ShaderAttributeObject* iVertexTBNNormalAttribObject;
 	ShaderAttributeObject* iVertexBinormalAttribObject;
 };
 
