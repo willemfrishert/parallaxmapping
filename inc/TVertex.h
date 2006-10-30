@@ -30,6 +30,8 @@ public:
 
 	TVector2<float> iTexCoord;
 
+	TVector3<float> iTBNNormal;
+
 	TVector3<float> iBinormal;
 
 	TVector3<float> iTangent;
