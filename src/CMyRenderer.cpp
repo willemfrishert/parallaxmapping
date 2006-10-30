@@ -96,8 +96,8 @@ void CMyRenderer::InitMain()
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
-	textureId = loadTGATexture("textures/bricks.tga");
-	bumpMapId = loadTGATexture("textures/bricks_scratchDOT3.tga");
+	textureId = loadTGATexture("textures/rocks.tga");
+	bumpMapId = loadTGATexture("textures/rocks_normal.tga");
 
 	InitShaders();
 }
