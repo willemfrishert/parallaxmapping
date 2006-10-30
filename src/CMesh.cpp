@@ -5,6 +5,7 @@ CMesh::CMesh()
 : iIndicesCount( 0 )
 , iVertexBinormalAttribObject( NULL )
 , iVertexTangentAttribObject( NULL )
+, iVertexTBNNormalAttribObject( NULL )
 {
 }
 
@@ -19,6 +20,15 @@ CMesh::~CMesh(void)
 void CMesh::setBinormalAttributeObject(ShaderAttributeObject* aBinormal)
 {
 	this->iVertexBinormalAttribObject = aBinormal;
+}
+
+/**
+* @param aLocation
+* @description sets the binormal location on the shader
+*/
+void CMesh::setTBNNormalAttributeObject(ShaderAttributeObject* aTBNNormal)
+{
+	this->iVertexTBNNormalAttribObject = aTBNNormal;
 }
 
 /**
@@ -42,10 +52,12 @@ void CMesh::draw()
 	glEnableClientState( GL_TEXTURE_COORD_ARRAY );  
 	
 	assert( this->iVertexTangentAttribObject );
+	assert( this->iVertexTBNNormalAttribObject );
 	assert( this->iVertexBinormalAttribObject );
 
 	// Enable special attributes: Tangent and Binormal arrays
 	glEnableVertexAttribArray( this->iVertexTangentAttribObject->getIndex() );
+	glEnableVertexAttribArray( this->iVertexTBNNormalAttribObject->getIndex() );
 	glEnableVertexAttribArray( this->iVertexBinormalAttribObject->getIndex() );
 	
 	// Passing the information to openGL using pointers to the actual arrays
@@ -55,6 +67,8 @@ void CMesh::draw()
 
 	glVertexAttribPointer(this->iVertexTangentAttribObject->getIndex(), 3, GL_FLOAT, 0, sizeof(TVertex), 
 		&(this->iVertices[0].iTangent.x()));
+	glVertexAttribPointer(this->iVertexTBNNormalAttribObject->getIndex(), 3, GL_FLOAT, 0, sizeof(TVertex), 
+		&(this->iVertices[0].iTBNNormal.x()));
 	glVertexAttribPointer(this->iVertexBinormalAttribObject->getIndex(), 3, GL_FLOAT, 0, sizeof(TVertex), 
 		&(this->iVertices[0].iBinormal.x()));
 
@@ -62,6 +76,7 @@ void CMesh::draw()
 	glDrawElements(GL_TRIANGLES, this->iIndicesCount, GL_UNSIGNED_INT, &(this->iIndices.front()));
 
 	glDisableVertexAttribArray( this->iVertexTangentAttribObject->getIndex() );
+	glDisableVertexAttribArray( this->iVertexTBNNormalAttribObject->getIndex() );
 	glDisableVertexAttribArray( this->iVertexBinormalAttribObject->getIndex() );
 	glDisableClientState( GL_VERTEX_ARRAY );	
 	glDisableClientState( GL_NORMAL_ARRAY );	
@@ -112,9 +127,9 @@ void CMesh::createInverseTBNMatrices()
 		TVertex& v1 = this->getVertex( indices[1] );
 		TVertex& v2 = this->getVertex( indices[2] );
 
-		v0.iNormal.set( 0, 0 ,0 );
-		v1.iNormal.set( 0, 0 ,0 );
-		v2.iNormal.set( 0, 0 ,0 );
+		v0.iTBNNormal.set( 0, 0 ,0 );
+		v1.iTBNNormal.set( 0, 0 ,0 );
+		v2.iTBNNormal.set( 0, 0 ,0 );
 
 		createInverseTBNMatrix( v0, v1, v2 );
 		createInverseTBNMatrix( v1, v2, v0 );
@@ -124,7 +139,7 @@ void CMesh::createInverseTBNMatrices()
 	vector<TVertex>::iterator vertexIterator = iVertices.begin();
 	for (;vertexIterator != iVertices.end(); vertexIterator++)
 	{
-		(*vertexIterator).iNormal.Normalize();
+		(*vertexIterator).iTBNNormal.Normalize();
 		(*vertexIterator).iTangent.Normalize();
 		(*vertexIterator).iBinormal.Normalize();
 	}
@@ -186,7 +201,7 @@ void CMesh::createInverseTBNMatrix(TVertex& aVertex0,
 	{
 		aVertex0.iTangent.add(	1.0f, 0.0f, 0.0f);
 		aVertex0.iBinormal.add(	0.0f, 1.0f, 0.0f);
-		aVertex0.iNormal.add(	0.0f, 0.0f, 1.0f);
+		aVertex0.iTBNNormal.add(0.0f, 0.0f, 1.0f);
 	}
 	else
 	{
@@ -220,7 +235,7 @@ void CMesh::createInverseTBNMatrix(TVertex& aVertex0,
 			(N^T).y() * invDeterminant2,
 			((-T)^B).y() * invDeterminant2 );
 
-		aVertex0.iNormal.add( 
+		aVertex0.iTBNNormal.add( 
 			(B^N).z() * invDeterminant2,
 			((-N)^T).z() * invDeterminant2,
 			(T^B).z() * invDeterminant2 );
