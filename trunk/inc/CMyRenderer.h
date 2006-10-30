@@ -115,12 +115,13 @@ private:
 	ShaderObject* iFragmentShader;
 	
 	float angle;
-	GLuint textureId;
-	GLuint bumpMapId;
+	GLuint textureMapId;
+	GLuint heightMapId;
 	ShaderAttributeObject* tangentAttributeObject;
-	ShaderAttributeObject* binormaltAttributeObject;
-	ShaderUniformValue<int>* textureUniformObject;
-	ShaderUniformValue<int>* bumpMapUniformObject;	
+	ShaderAttributeObject* binormalAttributeObject;
+	ShaderAttributeObject* tbnNormalAttributeObject;
+	ShaderUniformValue<int>* textureMapUniformObject;
+	ShaderUniformValue<int>* heightMapUniformObject;	
 };
 
 
