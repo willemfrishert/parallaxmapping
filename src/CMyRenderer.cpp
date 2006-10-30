@@ -30,12 +30,12 @@ CMyRenderer::CMyRenderer()
 , iPreviousFrame(0)
 , iPreviousTime(0)
 , angle(0)
-, textureId(0)
-, bumpMapId(0)
+, textureMapId(0)
+, heightMapId(0)
 , tangentAttributeObject(0)
-, binormaltAttributeObject(NULL)
-, textureUniformObject(NULL)
-, bumpMapUniformObject(NULL)	
+, binormalAttributeObject(NULL)
+, textureMapUniformObject(NULL)
+, heightMapUniformObject(NULL)	
 {
 	InitMain();
 	CMyRenderer::iCurrentRenderer = this;
@@ -51,8 +51,8 @@ CMyRenderer::~CMyRenderer()
 
 void CMyRenderer::InitShaders()
 {
-	iVertexShader = new ShaderObject(GL_VERTEX_SHADER, "shader/bumpmap.vert");
-	iFragmentShader = new ShaderObject(GL_FRAGMENT_SHADER, "shader/bumpmap.frag");
+	iVertexShader = new ShaderObject(GL_VERTEX_SHADER, "shader/parallaxmap.vert");
+	iFragmentShader = new ShaderObject(GL_FRAGMENT_SHADER, "shader/parallaxmap.frag");
 
 	iShaderProgram = new ShaderProgram();
 	
@@ -60,29 +60,31 @@ void CMyRenderer::InitShaders()
 	iShaderProgram->attachShader( *iFragmentShader );
 
 	tangentAttributeObject = new ShaderAttributeObject("tangent");
-	binormaltAttributeObject = new ShaderAttributeObject("binormal");
+	binormalAttributeObject = new ShaderAttributeObject("binormal");
+	tbnNormalAttributeObject = new ShaderAttributeObject("tbnNormal");
 
-	textureUniformObject = new ShaderUniformValue<int>();
-	textureUniformObject->setName("decalTex");
-	textureUniformObject->setValue( 0 );
+	textureMapUniformObject = new ShaderUniformValue<int>();
+	textureMapUniformObject->setName("textureMap");
+	textureMapUniformObject->setValue( 0 );
 	
-	bumpMapUniformObject = new ShaderUniformValue<int>();
-	bumpMapUniformObject->setName("bumpTex");
-	bumpMapUniformObject->setValue( 1 );
+	heightMapUniformObject = new ShaderUniformValue<int>();
+	heightMapUniformObject->setName("heightMap");
+	heightMapUniformObject->setValue( 1 );
 
 	iShaderProgram->addAttributeObject( tangentAttributeObject );
-	iShaderProgram->addAttributeObject( binormaltAttributeObject );
-	iShaderProgram->addUniformObject( textureUniformObject );
-	iShaderProgram->addUniformObject( bumpMapUniformObject );
+	iShaderProgram->addAttributeObject( binormalAttributeObject );
+	iShaderProgram->addAttributeObject( tbnNormalAttributeObject );
+	iShaderProgram->addUniformObject( textureMapUniformObject );
+	iShaderProgram->addUniformObject( heightMapUniformObject );
 
 	iShaderProgram->buildProgram();
 
 	// initialize multitexturing
 	glActiveTexture(GL_TEXTURE0 );
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindTexture(GL_TEXTURE_2D, textureMapId);
 
 	glActiveTexture(GL_TEXTURE1 );
-	glBindTexture(GL_TEXTURE_2D, bumpMapId);
+	glBindTexture(GL_TEXTURE_2D, heightMapId);
 }
 
 //
@@ -96,8 +98,8 @@ void CMyRenderer::InitMain()
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
-	textureId = loadTGATexture("textures/rocks.tga");
-	bumpMapId = loadTGATexture("textures/rocks_normal.tga");
+	textureMapId = loadTGATexture("textures/rocks.tga");
+	heightMapId = loadTGATexture("textures/rocks_heightmap.tga");
 
 	InitShaders();
 }
@@ -117,8 +119,9 @@ void CMyRenderer::CreateScene()
 
 	this->mesh->createInverseTBNMatrices();
 
-	this->mesh->setBinormalAttributeObject( binormaltAttributeObject );
+	this->mesh->setBinormalAttributeObject( binormalAttributeObject );
 	this->mesh->setTangentAttributeObject( tangentAttributeObject );
+	this->mesh->setTBNNormalAttributeObject( tbnNormalAttributeObject );
 }
 
 
@@ -229,7 +232,7 @@ void CMyRenderer::RenderScene()
 
 	//glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D, bumpMapId);
+	//glBindTexture(GL_TEXTURE_2D, heightMapId);
 
 	glPushMatrix();
 	glTranslatef(0, 0, -5);
