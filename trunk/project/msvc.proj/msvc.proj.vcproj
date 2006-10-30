@@ -303,13 +303,14 @@
 		</Filter>
 		<Filter
 			Name="shaders"
+			Filter="vert;frag"
 			>
 			<File
-				RelativePath="..\..\shader\bumpmap.frag"
+				RelativePath=".\parallaxmap.frag"
 				>
 			</File>
 			<File
-				RelativePath="..\..\shader\bumpmap.vert"
+				RelativePath=".\parallaxmap.vert"
 				>
 			</File>
 		</Filter>
