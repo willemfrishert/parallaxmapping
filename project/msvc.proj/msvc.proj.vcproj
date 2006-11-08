@@ -305,14 +305,6 @@
 			Name="shaders"
 			Filter="vert;frag"
 			>
-			<File
-				RelativePath=".\parallaxmap.frag"
-				>
-			</File>
-			<File
-				RelativePath=".\parallaxmap.vert"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
