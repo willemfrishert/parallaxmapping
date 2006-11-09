@@ -14,7 +14,7 @@ varying vec3 normal;
 
 
 // ############# FUNCTIONS ###############
-float getIntersectionHeight(vec2 p1, vec2 p2, vec2 p3, vec p4);
+float getIntersectionHeight(vec2 p1, vec2 p2, vec2 p3, vec2 p4);
 
 void main() 
 {
@@ -35,7 +35,7 @@ void main()
 	//
 	// FOR NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//
-	float offsetLimit = 2.0;
+	float offsetLimit = 0.2;
 	
 	// the step size
 	float delta = offsetLimit / n;
@@ -46,12 +46,25 @@ void main()
 	vec3 prevSampleVec = t0;
 	vec3 currSampleVec = t0 + stepVec;
 	
-	float prevSurfaceHeight = texture2D(heightMap, prevSampleVec.xy);
-	float currSurfaceHeight = texture2D(heightMap, currSampleVec.xy);
+	// just get any coordinate value because it's a greyscale image
+	float prevSurfaceHeight = texture2D(heightMap, prevSampleVec.xy).x;
+	float currSurfaceHeight = texture2D(heightMap, currSampleVec.xy).x;
+	
+	texture2D(textureMap, currSampleVec.xy).x;
+
+	int i = 0;
+	for(;i < 5;i++)
+	{
+		i++;
+	}
+	
+	gl_FragColor = vec4(currSurfaceHeight, currSurfaceHeight, currSurfaceHeight, 1.0);
+	
+	return;
 	
 	// while the current surface height is bigger than our vector's height
 	// AND we didn't reach the offsete limit
-	while(( currSurfaceHeight < stepVec.z ) && (length(currSampleVec) < offsetLimit))
+/*	while(( currSurfaceHeight < stepVec.z ) && (length(currSampleVec) < offsetLimit))
 	{	
 		// update the two vectors
 		prevSampleVec = currSampleVec;
@@ -59,7 +72,7 @@ void main()
 		
 		// and their corresponding heights
 		prevSurfaceHeight = currSurfaceHeight;
-		currSurfaceHeight = texture2D(heightMap, currSampleVec.xy);
+		currSurfaceHeight = texture2D(heightMap, currSampleVec.xy).x;
 	}
 	
 	vec3 toffset;
@@ -70,11 +83,13 @@ void main()
 		// perhaps take the offsetLimit as the displacement?
 		// toffset.x = offsetLimit;
 		// toffset.y = offsetLimit;
+		
+		toffset = vec3(1,1,1);
 	}
 	else
 	{
 		float intersectionHeight = getIntersectionHeight( prevSampleVec.xz,
-					currSampleVec.xz, vec2(prevSample.x, prevSurfaceHeight),
+					currSampleVec.xz, vec2(prevSampleVec.x, prevSurfaceHeight),
 					vec2(currSampleVec.x, currSurfaceHeight) );
 					
 		float ratio = intersectionHeight / viewDirNormalized.z;
@@ -82,13 +97,11 @@ void main()
 		toffset = vec3(viewDirNormalized.xy * ratio, intersectionHeight);
 	}
 	
-
-	
-	gl_fragColor = texture2D(textureMap, toffset);
+	gl_FragColor = texture2D(textureMap, toffset.xy);*/
 }
 
 
-float getIntersectionHeight(vec2 p1, vec2 p2, vec2 p3, vec p4)
+float getIntersectionHeight(vec2 p1, vec2 p2, vec2 p3, vec2 p4)
 {
 	return ((p4.x - p3.x)*(p1.y - p3.y) - (p4.y - p3.y)*(p1.x - p3.x)) /
 			((p4.y - p3.y)*(p2.x - p1.x) - (p4.x - p3.x)*(p2.y - p1.y));
