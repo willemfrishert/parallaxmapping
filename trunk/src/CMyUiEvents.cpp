@@ -61,6 +61,9 @@ void CMyUiEvents::ProcessCursorKeys(int key, int x, int y)
 
 void CMyUiEvents::ProcessMouseEvent( int button, int state, int x, int y )
 {
+	iMouseY = y;
+	iMouseX = x;
+
 	switch (button)
 	{
 		//Set point of rotation
@@ -68,7 +71,8 @@ void CMyUiEvents::ProcessMouseEvent( int button, int state, int x, int y )
 		if(GLUT_DOWN == state)
 		{
 			iMouseButtonDown = EMouseDownLeft;
-			iMouseY = y;
+			this->iRenderer->SetOldXRotation( this->iRenderer->GetXRotation() );
+			this->iRenderer->SetOldXRotation( this->iRenderer->GetYRotation() );
 		}
 		else
 		{
@@ -100,7 +104,10 @@ void CMyUiEvents::ProcessMouseMotionEvent( int x, int y )
 {
 	if( EMouseDownLeft == iMouseButtonDown)
 	{
-		iMouseY = y;
+		this->iRenderer->SetXRotation( this->iRenderer->GetOldXRotation() 
+			+ (float)(y - this->iMouseY) / 4.0);
+		this->iRenderer->SetYRotation( this->iRenderer->GetOldYRotation() 
+			+ (float)(x - this->iMouseX) / 4.0);
 	}
 }
 

@@ -36,6 +36,10 @@ CMyRenderer::CMyRenderer()
 , binormalAttributeObject(NULL)
 , textureMapUniformObject(NULL)
 , heightMapUniformObject(NULL)	
+, iXRotation( 0 )
+, iYRotation( 0 )
+, iOldXRotation( 0 )
+, iOldYRotation( 0 )
 {
 	InitMain();
 	CMyRenderer::iCurrentRenderer = this;
@@ -71,11 +75,16 @@ void CMyRenderer::InitShaders()
 	heightMapUniformObject->setName("heightMap");
 	heightMapUniformObject->setValue( 1 );
 
+	normalMapUniformObject = new ShaderUniformValue<int>();
+	normalMapUniformObject->setName("normalMap");
+	normalMapUniformObject->setValue( 2 );
+
 	iShaderProgram->addAttributeObject( tangentAttributeObject );
 	iShaderProgram->addAttributeObject( binormalAttributeObject );
 	iShaderProgram->addAttributeObject( tbnNormalAttributeObject );
 	iShaderProgram->addUniformObject( textureMapUniformObject );
 	iShaderProgram->addUniformObject( heightMapUniformObject );
+	iShaderProgram->addUniformObject( normalMapUniformObject );
 
 	iShaderProgram->buildProgram();
 
@@ -85,6 +94,9 @@ void CMyRenderer::InitShaders()
 
 	glActiveTexture(GL_TEXTURE1 );
 	glBindTexture(GL_TEXTURE_2D, heightMapId);
+
+	glActiveTexture(GL_TEXTURE2 );
+	glBindTexture(GL_TEXTURE_2D, normalMapId);
 }
 
 //
@@ -98,8 +110,9 @@ void CMyRenderer::InitMain()
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
-	textureMapId = loadTGATexture("textures/rocks.tga");
-	heightMapId = loadTGATexture("textures/rocks_heightmap.tga");
+	textureMapId = loadTGATexture("textures/rockwall.tga");
+	heightMapId = loadTGATexture("textures/rockwall_height.tga");
+	normalMapId = loadTGATexture("textures/rockwallDOT3.tga");
 
 	InitShaders();
 }
@@ -202,6 +215,12 @@ void CMyRenderer::DrawText() const
 void CMyRenderer::RenderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	//glRotatef(this->iXRotation, 1, 0, 0);
+	//glRotatef(this->iYRotation, 0, 1, 0);
 
 	FramesPerSec();
 
@@ -214,16 +233,16 @@ void CMyRenderer::RenderScene()
 	//glDisable(GL_LIGHTING);
 	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
 	GLfloat specular[4] = {1, 1, 1, 1.0};
-	GLfloat light_pos[4] = {0.0f, 0.5f, 0.5f, 0};
+	GLfloat light_pos[4] = {0.0f, 0.0f, 1.0f, 0};
 	GLfloat shininess = 10;
 
 	// since we are scaling (in our particular case, uniform scaling) 
 	// the object, the normals need to be rescaled
-	glEnable(GL_RESCALE_NORMAL);
+	//glEnable(GL_RESCALE_NORMAL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glPushMatrix();
-		glRotatef(angle, 0, 0, 1);
+		//glRotatef(angle, 0, 0, 1);
 		glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 	glPopMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
@@ -235,10 +254,13 @@ void CMyRenderer::RenderScene()
 	//glBindTexture(GL_TEXTURE_2D, heightMapId);
 
 	glPushMatrix();
-	glTranslatef(0, 0, -5);
-	//glRotatef(angle, 0, 1, 0);
-	glScalef(0.1f, 0.1f, 0.1f);
-	this->mesh->draw();
+	{
+		glTranslatef(0, 0, -30);
+		glRotatef(this->iXRotation, 1, 0, 0);
+		glRotatef(this->iYRotation, 0, 1, 0);
+		//glScalef(0.1f, 0.1f, 0.1f);
+		this->mesh->draw();
+	}
 	glPopMatrix();
 
 	angle += 1.5f;
@@ -250,6 +272,46 @@ void CMyRenderer::RenderScene()
 	iShaderProgram->disableProgram();
 
 	glutSwapBuffers();
+}
+
+void CMyRenderer::SetXRotation(float aXRotation)
+{
+	this->iXRotation = aXRotation;
+}
+
+void CMyRenderer::SetYRotation(float aYRotation)
+{
+	this->iYRotation = aYRotation;
+}
+
+float CMyRenderer::GetXRotation()
+{
+	return this->iXRotation;
+}
+
+float CMyRenderer::GetYRotation()
+{
+	return this->iYRotation;
+}
+
+void CMyRenderer::SetOldXRotation(float aXRotation)
+{
+	this->iOldXRotation = aXRotation;
+}
+
+void CMyRenderer::SetOldYRotation(float aYRotation)
+{
+	this->iOldYRotation = aYRotation;
+}
+
+float CMyRenderer::GetOldXRotation()
+{
+	return this->iOldXRotation;
+}
+
+float CMyRenderer::GetOldYRotation()
+{
+	return this->iOldYRotation;
 }
 
 //-----------------------------

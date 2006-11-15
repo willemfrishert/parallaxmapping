@@ -55,6 +55,30 @@ public:
 	///Creates a Scene
 	void CreateScene();
 
+	///Sets the Trackball's X rotation
+	void SetXRotation(float aXRotation);
+
+	///Sets the Trackball's Y rotation
+	void SetYRotation(float aYRotation);
+
+	///Gets the Trackball's X rotation
+	float GetXRotation();
+
+	///Gets the Trackball's Y rotation
+	float GetYRotation();
+
+	///Sets the Trackball's X rotation
+	void SetOldXRotation(float aXRotation);
+
+	///Sets the Trackball's Y rotation
+	void SetOldYRotation(float aYRotation);
+
+	///Gets the Trackball's X rotation
+	float GetOldXRotation();
+
+	///Gets the Trackball's Y rotation
+	float GetOldYRotation();
+
 
 	//GETTERS
 	//---------------------------------------
@@ -117,11 +141,19 @@ private:
 	float angle;
 	GLuint textureMapId;
 	GLuint heightMapId;
+	GLuint normalMapId;
 	ShaderAttributeObject* tangentAttributeObject;
 	ShaderAttributeObject* binormalAttributeObject;
 	ShaderAttributeObject* tbnNormalAttributeObject;
 	ShaderUniformValue<int>* textureMapUniformObject;
 	ShaderUniformValue<int>* heightMapUniformObject;	
+	ShaderUniformValue<int>* normalMapUniformObject;
+
+	// Trackball attributes
+	float iXRotation;
+	float iYRotation;
+	float iOldXRotation;
+	float iOldYRotation;
 };
 
 
