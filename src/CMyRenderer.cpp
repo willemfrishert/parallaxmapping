@@ -112,7 +112,7 @@ void CMyRenderer::InitMain()
 
 	textureMapId = loadTGATexture("textures/rockwall.tga");
 	heightMapId = loadTGATexture("textures/rockwall_height.tga");
-	normalMapId = loadTGATexture("textures/rockwallDOT3.tga");
+	normalMapId = loadTGATexture("textures/rockwall_heightDOT3.tga");
 
 	InitShaders();
 }
