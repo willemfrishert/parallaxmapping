@@ -10,18 +10,11 @@ varying vec4 passColor;
 varying vec3 lightDir;
 varying vec3 viewDir;
 
-// The geometric normal
-varying vec3 normal;
-
-
-// ############# FUNCTIONS ###############
-
-
 void main() 
 {
 	vec3 lightDirNormalized = normalize( lightDir );
 	vec3 viewDirNormalized = normalize( viewDir );
-	vec3 normalNormalized = normalize( normal );
+	//vec3 normalNormalized = normalize( normal );
 	
 	// the initial/input texture coordinate
 	// NOTE: this is the coordinate that would be used
@@ -42,6 +35,8 @@ void main()
 	// to [0, 1] before it was saved
 	bumpNormal = (bumpNormal - 0.5) * 2.0;
 	bumpNormal = normalize( bumpNormal );
+
+	bumpNormal = gl_NormalMatrix * bumpNormal;
 	
 	// Find the dot product between the light direction and the normal
 	float NdotL = max(dot(bumpNormal, lightDirNormalized), 0.0);
@@ -52,4 +47,7 @@ void main()
 	vec3 diffuse = NdotL * parallaxColor.rgb; 
 	
 	gl_FragColor = vec4(diffuse, parallaxColor.a);
+//	gl_FragColor = vec4(NdotL, NdotL, NdotL, 1.0);
+//	gl_FragColor = vec4(bumpNormal, 1.0);
+//	gl_FragColor = texture2D(normalMap, t0);
 }
