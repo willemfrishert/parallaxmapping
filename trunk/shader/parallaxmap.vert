@@ -5,9 +5,6 @@ varying vec4 passColor;
 varying vec3 lightDir;
 varying vec3 viewDir;
 
-// Pass the geometric normal to the fragment shader
-varying vec3 normal;
-
 // The inverse tangent, binormal and normal to the geometry int tangent space
 attribute vec3 tangent;
 attribute vec3 binormal;
@@ -35,13 +32,10 @@ void main()
 	viewDir  = (gl_ModelViewMatrix * gl_Vertex).xyz;
 	viewDir  = rotmat * normalize( viewDir );
 	
-	normal = gl_NormalMatrix * gl_Normal;
-	
 	// Normalize the light and eye vector
 	normalize( lightDir );
-	normalize( normal );
 	normalize( viewDir );
-	
+
 	// Use the first set of texture coordinates in the fragment shader 
 	gl_TexCoord[0] = gl_MultiTexCoord0;
 }
