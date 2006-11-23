@@ -72,7 +72,7 @@ void CMyUiEvents::ProcessMouseEvent( int button, int state, int x, int y )
 		{
 			iMouseButtonDown = EMouseDownLeft;
 			this->iRenderer->SetOldXRotation( this->iRenderer->GetXRotation() );
-			this->iRenderer->SetOldXRotation( this->iRenderer->GetYRotation() );
+			this->iRenderer->SetOldYRotation( this->iRenderer->GetYRotation() );
 		}
 		else
 		{
