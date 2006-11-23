@@ -90,6 +90,7 @@ public:
 	Load3ds();
 	~Load3ds();
 	CMesh* Create(char *);
+	CMesh* CreateUsingATI(char *);
 
 private:
 	int GetString(char *);

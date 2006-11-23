@@ -34,6 +34,7 @@ me interested in all this.
 */
 
 #include "3ds.h"
+#include "ati_3ds.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -82,6 +83,86 @@ CMesh* Load3ds::Create(char * aFilename)
 	CleanUp();
 
 	return this->mMesh;
+}
+
+CMesh* Load3ds::CreateUsingATI(char* filename)
+{
+	data3ds_t data3DSModel;
+	mesh3ds_t dataMesh;
+	long status = Read3dsFile(filename, &data3DSModel);
+	//Calculate3dsNormals( &data3DSModel );
+
+	//typedef struct data3ds_s
+	//{
+	//	int            materialCount;
+	//	int            meshCount;
+	//	int            vertCount;
+	//	int            triCount;
+	//	material3ds_t  *materials;
+	//	mesh3ds_t      *meshes;
+	//	float          min[3];
+	//	float          max[3];
+	//	float          center[3];
+	//} data3ds_t;
+
+	//vector<TVertex> iVertices;
+	//vector<GLuint> iIndices;
+	//int iIndicesCount;
+
+	if ( ! status )
+	{
+		this->mMesh = new CMesh;
+		dataMesh = data3DSModel.meshes[0];
+	}
+	
+
+
+
+	//int j = 0;
+	TVector3<float> position, normal;
+	TVector2<float> texCoord;
+
+	// the number of faces * 3: 3 indices per face
+	for (int i = 0; i < dataMesh.triCount; i++)
+	{
+		mMesh->addTriangleIndices(dataMesh.tris[i][0], dataMesh.tris[i][1], dataMesh.tris[i][2]);
+	}
+
+	// set up all the information: position, normal and eventually
+	// the texture coordinates, and compile them into our TVertex class
+	for (int i = 0; i < dataMesh.vertCount; i++)
+	{
+		position.setX( dataMesh.verts[i][0] );
+		position.setY( dataMesh.verts[i][1] );
+		position.setZ( dataMesh.verts[i][2] );
+
+		normal.setX( dataMesh.norms[i][0] );
+		normal.setY( dataMesh.norms[i][1] );
+		normal.setZ( dataMesh.norms[i][2] );
+
+		if ( dataMesh.texCoordCount != 0 )
+		{
+			texCoord.setX( dataMesh.texCoords[i][0] );
+			texCoord.setY( dataMesh.texCoords[i][1] );
+		}
+
+		TVertex v = TVertex(normal, position, texCoord);
+		v.iTangent.setX( dataMesh.tangentSpace[i][0] );
+		v.iTangent.setY( dataMesh.tangentSpace[i][1] );
+		v.iTangent.setZ( dataMesh.tangentSpace[i][2] );
+
+		v.iBinormal.setX( dataMesh.tangentSpace[i][3] );
+		v.iBinormal.setY( dataMesh.tangentSpace[i][4] );
+		v.iBinormal.setZ( dataMesh.tangentSpace[i][5] );
+
+		v.iTBNNormal.setX( dataMesh.tangentSpace[i][6] );
+		v.iTBNNormal.setY( dataMesh.tangentSpace[i][7] );
+		v.iTBNNormal.setZ( dataMesh.tangentSpace[i][8] );
+
+		mMesh->addVertex( v );
+	}
+
+	return mMesh;
 }
 
 
