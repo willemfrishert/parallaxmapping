@@ -110,9 +110,9 @@ void CMyRenderer::InitMain()
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
-	textureMapId = loadTGATexture("textures/rockwall.tga");
-	heightMapId = loadTGATexture("textures/rockwall_height.tga");
-	normalMapId = loadTGATexture("textures/rockwall_heightDOT3.tga");
+	textureMapId = loadTGATexture("textures/rockwall_rot.tga");
+	heightMapId = loadTGATexture("textures/rockwall_height_rot.tga");
+	normalMapId = loadTGATexture("textures/rockwall_heightDOT3_rot.tga");
 
 	InitShaders();
 }
@@ -128,9 +128,10 @@ void CMyRenderer::CreateScene()
 {
 	Load3ds modelLoader;
 	
-	this->mesh = modelLoader.Create("3ds/plane.3ds");
+	//this->mesh = modelLoader.Create("3ds/plane.3ds");
+	this->mesh = modelLoader.CreateUsingATI("3ds/teapot.3ds");
 
-	this->mesh->createInverseTBNMatrices();
+	//this->mesh->createInverseTBNMatrices();
 
 	this->mesh->setBinormalAttributeObject( binormalAttributeObject );
 	this->mesh->setTangentAttributeObject( tangentAttributeObject );
@@ -185,6 +186,7 @@ void CMyRenderer::DrawText() const
 	gluOrtho2D( -1.0f, 1.0f, -1.0f, 1.0f);
 
 	glDisable(GL_LIGHTING);
+	glDisable( GL_TEXTURE_2D );
 	glDisable(GL_DEPTH_TEST);
 
 	glColor3f(1.0, 0.0, 0.0);
@@ -219,11 +221,8 @@ void CMyRenderer::RenderScene()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//glRotatef(this->iXRotation, 1, 0, 0);
-	//glRotatef(this->iYRotation, 0, 1, 0);
-
+	// Draw Text
 	FramesPerSec();
-
 	DrawText();
 
 	iShaderProgram->useProgram();
@@ -233,7 +232,7 @@ void CMyRenderer::RenderScene()
 	//glDisable(GL_LIGHTING);
 	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
 	GLfloat specular[4] = {1, 1, 1, 1.0};
-	GLfloat light_pos[4] = {0.0f, 0.0f, 1.0f, 0};
+	GLfloat light_pos[4] = {1.5f, 0.0f, 1.0f, 0};
 	GLfloat shininess = 10;
 
 	// since we are scaling (in our particular case, uniform scaling) 
@@ -242,7 +241,7 @@ void CMyRenderer::RenderScene()
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glPushMatrix();
-		//glRotatef(angle, 0, 0, 1);
+		glRotatef(angle, 0, 0, 1);
 		glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 	glPopMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
@@ -255,7 +254,7 @@ void CMyRenderer::RenderScene()
 
 	glPushMatrix();
 	{
-		glTranslatef(0, 0, -30);
+		glTranslatef(0, 0, -10);
 		glRotatef(this->iXRotation, 1, 0, 0);
 		glRotatef(this->iYRotation, 0, 1, 0);
 		//glScalef(0.1f, 0.1f, 0.1f);
@@ -270,6 +269,22 @@ void CMyRenderer::RenderScene()
 	}
 
 	iShaderProgram->disableProgram();
+
+	//glDisable( GL_LIGHTING );
+	//glPolygonMode(GL_FRONT, GL_LINE);
+	//glLineWidth( 4 );
+	//glColor3f(1,1,1);
+	//glPushMatrix();
+	//{
+	//	glTranslatef(0, 0, -80);
+	//	glRotatef(this->iXRotation, 1, 0, 0);
+	//	glRotatef(this->iYRotation, 0, 1, 0);
+	//	//glScalef(0.1f, 0.1f, 0.1f);
+	//	this->mesh->draw();
+	//}
+	//glPopMatrix();
+	//glEnable( GL_LIGHTING );
+	//glPolygonMode( GL_FRONT, GL_FILL );
 
 	glutSwapBuffers();
 }
