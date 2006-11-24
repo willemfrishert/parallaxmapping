@@ -109,7 +109,11 @@ private:
 	/// Text output. Prints text on the screen.
 	void DrawText() const;
 
+	void ReadPixel (GLubyte *image, GLubyte *pix, int x, int y, int width);
 
+	void WritePixel (GLubyte *image, GLubyte *pix, int x, int y, int width);
+
+	GLuint GenerateDOT3( GLuint aHeightMapId );
 
 	//DRAWING FUNCTIONS
 	//------------------
