@@ -989,6 +989,10 @@ long Read3dsFile(char* pFilename, data3ds_t* output)
 	{
       fseek(g_pFile, 0, SEEK_SET);
       fread(&chunk, sizeof(chunk3ds_t), 1, g_pFile);
+#ifdef __BIG_ENDIAN__
+	  chunk.id = OSReadSwapInt16(&chunk.id,0);
+	  chunk.length = OSReadSwapInt32(&chunk.length,0);
+#endif
       if (chunk.id == 0x4d4d)
       {
          ReadChunkArray(chunk.length - 6, (cb)ReadMain3ds, output);
@@ -1075,7 +1079,10 @@ void ReadChunkArray(long length, void (*callback)(chunk3ds_t*, void*), void* dat
       // read in the sub chunk //
       //=======================//
       fread(&chunk, sizeof(chunk3ds_t), 1, g_pFile);
-
+#ifdef __BIG_ENDIAN__
+	  chunk.id = OSReadSwapInt16(&chunk.id,0);
+	  chunk.length = OSReadSwapInt32(&chunk.length,0);
+#endif
       //===========================//
       // callback with subchunk id //
       //===========================//
@@ -1116,7 +1123,10 @@ void InspectChunkArray(long length, void (*callback)(chunk3ds_t*, void*), void* 
       // read in the sub chunk //
       //=======================//
       fread(&chunk, sizeof(chunk3ds_t), 1, g_pFile);
-   
+#ifdef __BIG_ENDIAN__
+	  chunk.id = OSReadSwapInt16(&chunk.id,0);
+	  chunk.length = OSReadSwapInt32(&chunk.length,0);
+#endif 
       //===========================//
       // callback with subchunk id //
       //===========================//
@@ -1265,11 +1275,23 @@ void ReadVertexList(mesh3ds_t* output)
 {
    unsigned short	shNumCoords;
    fread(&shNumCoords, sizeof(unsigned short), 1, g_pFile);
-
+#ifdef __BIG_ENDIAN__
+   shNumCoords = OSReadSwapInt16( &shNumCoords, 0 );
+#endif
+   
+   
 	output->vertCount = shNumCoords;
 	output->verts = (float(*)[3])malloc(sizeof(float) * 3 * output->vertCount);
 
    fread(output->verts, sizeof(float), 3 * output->vertCount, g_pFile);
+#ifdef __BIG_ENDIAN__
+	for (int i=0; i<output->vertCount;i++)
+	{
+		*((long*)(output->verts[i]+0)) = OSReadSwapInt32( &output->verts[i][0], 0 );
+		*((long*)(output->verts[i]+1)) = OSReadSwapInt32( &output->verts[i][1], 0 );	
+		*((long*)(output->verts[i]+2)) = OSReadSwapInt32( &output->verts[i][2], 0 );	
+	}
+#endif
 }
 
 void ReadFaceList(mesh3ds_t* output, long length)
@@ -1279,6 +1301,9 @@ void ReadFaceList(mesh3ds_t* output, long length)
 	unsigned short		shNumFaces;
 
    fread(&shNumFaces, sizeof(unsigned short), 1, g_pFile);
+#ifdef __BIG_ENDIAN__
+   shNumFaces = OSReadSwapInt16( &shNumFaces, 0 );
+#endif
    pos += sizeof(unsigned short);
 
 	output->triCount = shNumFaces;
@@ -1288,11 +1313,18 @@ void ReadFaceList(mesh3ds_t* output, long length)
 
 	for (i = 0; i < shNumFaces; i++)
 	{
-      fread(verts, sizeof(short), 4, g_pFile);
+		fread(verts, sizeof(short), 4, g_pFile);
+#ifdef __BIG_ENDIAN__
+		verts[0] = OSReadSwapInt32( &verts[0], 0 );
+		verts[1] = OSReadSwapInt32( &verts[1], 0 );	
+		verts[2] = OSReadSwapInt32( &verts[2], 0 );	
+		verts[3] = OSReadSwapInt32( &verts[3], 0 );	
+#endif
+		
 		for (int j = 0; j < 3; j++)
-      {
-         output->tris[i][j] = (long)verts[j];
-	   }
+		{
+			output->tris[i][j] = (long)verts[j];
+		}
    }
 
    pos += sizeof(unsigned short) * 4 * shNumFaces;
@@ -1336,6 +1368,13 @@ void ReadFaceSubs(chunk3ds_t* chunk, mesh3ds_t* output)
       if (output->smooth)
       {
          fread(output->smooth, sizeof(long), output->triCount, g_pFile);
+#ifdef __BIG_ENDIAN__
+		for (int i=0; i<output->triCount;i++)
+		{
+			output->smooth[i] = OSReadSwapInt32( &output->smooth[i], 0 );
+			
+		}
+#endif	  
       }
       break;
    };
@@ -1346,16 +1385,42 @@ void ReadTextureCoordinates(mesh3ds_t* output)
    unsigned short	shNumCoords;
 
 	fread(&shNumCoords, sizeof(unsigned short), 1, g_pFile);
+#ifdef __BIG_ENDIAN__
+	shNumCoords = OSReadSwapInt16( &shNumCoords, 0 );
+#endif
    output->texCoordCount = shNumCoords;
    
    output->texCoords = (float(*)[2])malloc(sizeof(float) * 2 * output->texCoordCount);
-	fread(output->texCoords, sizeof(float), 2 * output->texCoordCount, g_pFile);
+   fread(output->texCoords, sizeof(float), 2 * output->texCoordCount, g_pFile);
+#ifdef __BIG_ENDIAN__
+   for (int i=0; i<output->texCoordCount; i++)
+	{
+	   *((long*)(output->texCoords[i]+0)) = OSReadSwapInt32( &output->texCoords[i][0], 0 );
+	   *((long*)(output->texCoords[i]+1)) = OSReadSwapInt32( &output->texCoords[i][1], 0 );	
+	}
+#endif
 }
 
 void ReadLocalAxis(mesh3ds_t* output)
 {
    fread(output->axis, sizeof(float), 9, g_pFile);
+#ifdef __BIG_ENDIAN__
+	for (int i=0; i<3; i++)
+	{
+		for (int j=0; j<3; j++)
+		{
+			output->axis[i][j] = OSReadSwapInt32( &output->axis[i][j], 0 );
+		}	
+	}
+#endif	
+	
    fread(output->position, sizeof(float), 3, g_pFile);
+#ifdef __BIG_ENDIAN__
+	for (int i=0; i<3; i++)
+	{
+		output->position[i] = OSReadSwapInt32( &output->position[i], 0 );
+	}
+#endif
 }
 
 void ReadMaterialGroup(group3ds_t* group)
@@ -1366,6 +1431,9 @@ void ReadMaterialGroup(group3ds_t* group)
    ReadString(group->name);
 
    fread(&numFaces, sizeof(unsigned short), 1, g_pFile);
+#ifdef __BIG_ENDIAN__
+   numFaces = OSReadSwapInt16( &numFaces, 0 );
+#endif  
 
    group->tris = (long*)malloc(numFaces * sizeof(long));
 	
@@ -1378,7 +1446,10 @@ void ReadMaterialGroup(group3ds_t* group)
 
       for (int i = 0; i < numFaces; i++)
 		{
-         fread(&face, sizeof(unsigned short), 1, g_pFile);
+			fread(&face, sizeof(unsigned short), 1, g_pFile);
+#ifdef __BIG_ENDIAN__
+			face = OSReadSwapInt16( &face, 0 );
+#endif  
 			group->tris[i] = face;
 		}
 	}
