@@ -112,11 +112,141 @@ void CMyRenderer::InitMain()
 
 	textureMapId = loadTGATexture("textures/rockwall_rot.tga");
 	heightMapId = loadTGATexture("textures/rockwall_height_rot.tga");
-	normalMapId = loadTGATexture("textures/rockwall_heightDOT3_rot.tga");
+	//normalMapId = loadTGATexture("textures/rockwall_heightDOT3_rot.tga");
+
+	normalMapId = GenerateDOT3( heightMapId );
 
 	InitShaders();
 }
 
+void CMyRenderer::ReadPixel(GLubyte *image, GLubyte *pix, int x, int y, int width)
+{
+	pix[0] = *(image+width*3*y+x*3+0);
+	pix[1] = *(image+width*3*y+x*3+1);
+	pix[2] = *(image+width*3*y+x*3+2);	
+}
+
+void CMyRenderer::WritePixel(GLubyte *image, GLubyte *pix, int x, int y, int width)
+{
+	*(image+width*3*y+x*3+0) = pix[0];
+	*(image+width*3*y+x*3+1) = pix[1];
+	*(image+width*3*y+x*3+2) = pix[2];
+}
+
+GLuint CMyRenderer::GenerateDOT3( GLuint aHeightMapId )
+{		
+	glBindTexture( GL_TEXTURE_2D, aHeightMapId );
+
+	GLenum target = GL_TEXTURE_2D;
+	GLenum format = GL_RGB;
+	GLenum type = GL_UNSIGNED_BYTE;	
+
+	GLint level;	
+	glGetTexParameteriv( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, &level);
+	GLint internalFormat;
+	glGetTexLevelParameteriv( GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &internalFormat );
+	GLint border;
+	glGetTexLevelParameteriv( GL_TEXTURE_2D, 0, GL_TEXTURE_BORDER, &border );
+
+	GLint width;
+	glGetTexLevelParameteriv( GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width );
+	GLint height;
+	glGetTexLevelParameteriv( GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height );
+
+
+	GLubyte* srcImage = new GLubyte[width*height*3];
+	GLubyte* dstImage = new GLubyte[width*height*3];	
+
+	glGetTexImage( GL_TEXTURE_2D, 0, format, type, srcImage);
+
+	float dX, dY, nX, nY, nZ, oolen;
+	GLubyte pix[3];
+	for(int y = 0; y < height; y++)
+	{
+		for(int x = 0; x < width; x++)
+		{
+			// Do Y Sobel filter
+			ReadPixel(srcImage, pix, (x-1+width) % width, (y+1) % height, width);
+			dY  = ((float) pix[0]) / 255.0f * -1.0f;
+
+			ReadPixel(srcImage, pix,   x   % width, (y+1) % height, width);
+			dY += ((float) pix[0]) / 255.0f * -2.0f;
+
+			ReadPixel(srcImage, pix, (x+1) % width, (y+1) % height, width);
+			dY += ((float) pix[0]) / 255.0f * -1.0f;
+
+			ReadPixel(srcImage, pix, (x-1+width) % width, (y-1+height) % height, width);
+			dY += ((float) pix[0]) / 255.0f *  1.0f;
+
+			ReadPixel(srcImage, pix,   x   % width, (y-1+height) % height, width);
+			dY += ((float) pix[0]) / 255.0f *  2.0f;
+
+			ReadPixel(srcImage, pix, (x+1) % width, (y-1+height) % height, width);
+			dY += ((float) pix[0]) / 255.0f *  1.0f;
+
+			// Do X Sobel filter
+			ReadPixel(srcImage, pix, (x-1+width) % width, (y-1+height) % height, width);
+			dX  = ((float) pix[0]) / 255.0f * -1.0f;
+
+			ReadPixel(srcImage, pix, (x-1+width) % width,   y   % height, width);
+			dX += ((float) pix[0]) / 255.0f * -2.0f;
+
+			ReadPixel(srcImage, pix, (x-1+width) % width, (y+1) % height, width);
+			dX += ((float) pix[0]) / 255.0f * -1.0f;
+
+			ReadPixel(srcImage, pix, (x+1) % width, (y-1+height) % height, width);
+			dX += ((float) pix[0]) / 255.0f *  1.0f;
+
+			ReadPixel(srcImage, pix, (x+1) % width, y % height, width);
+			dX += ((float) pix[0]) / 255.0f *  2.0f;
+
+			ReadPixel(srcImage, pix, (x+1) % width, (y+1) % height, width);
+			dX += ((float) pix[0]) / 255.0f *  1.0f;
+
+
+			// Cross Product of components of gradient reduces to
+			nX = -dX;
+			nY = -dY;
+			nZ = 1;
+
+			// Normalize
+			oolen = 1.0f/((float) sqrt(nX*nX + nY*nY + nZ*nZ));
+			nX *= oolen;
+			nY *= oolen;
+			nZ *= oolen;
+
+			pix[0] = (GLubyte) ((nX+1.0f) / 2.0f * 255.0f);
+			pix[1] = (GLubyte) ((nY+1.0f) / 2.0f * 255.0f);
+			pix[2] = (GLubyte) ((nZ+1.0f) / 2.0f * 255.0f);
+
+			WritePixel(dstImage, pix, x, y, width);
+		}
+	}
+
+	GLuint normalMapId = 0;
+	/* generate texture */
+	glGenTextures (1, &normalMapId);
+	glBindTexture (GL_TEXTURE_2D, normalMapId);
+
+	/* setup some parameters for texture filters and mipmapping */
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);/*GL_CLAMP, GL_REPEAT*/
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+	glTexImage2D (GL_TEXTURE_2D, level, internalFormat,
+		width, height, border, format,
+		GL_UNSIGNED_BYTE, dstImage );
+
+	gluBuild2DMipmaps (GL_TEXTURE_2D, internalFormat,
+		width, height,
+		format, GL_UNSIGNED_BYTE, dstImage);	
+
+	delete[] srcImage;
+	delete[] dstImage;
+
+	return normalMapId;
+} 
 
 
 
@@ -129,7 +259,7 @@ void CMyRenderer::CreateScene()
 	Load3ds modelLoader;
 	
 	//this->mesh = modelLoader.Create("3ds/plane.3ds");
-	this->mesh = modelLoader.CreateUsingATI("3ds/teapot.3ds");
+	this->mesh = modelLoader.CreateUsingATI("3ds/plane.3ds");
 
 	//this->mesh->createInverseTBNMatrices();
 
@@ -223,7 +353,7 @@ void CMyRenderer::RenderScene()
 
 	// Draw Text
 	FramesPerSec();
-	DrawText();
+	
 
 	iShaderProgram->useProgram();
 
@@ -254,7 +384,7 @@ void CMyRenderer::RenderScene()
 
 	glPushMatrix();
 	{
-		glTranslatef(0, 0, -10);
+		glTranslatef(0, 0, -30);
 		glRotatef(this->iXRotation, 1, 0, 0);
 		glRotatef(this->iYRotation, 0, 1, 0);
 		//glScalef(0.1f, 0.1f, 0.1f);
@@ -285,7 +415,9 @@ void CMyRenderer::RenderScene()
 	//glPopMatrix();
 	//glEnable( GL_LIGHTING );
 	//glPolygonMode( GL_FRONT, GL_FILL );
-
+	
+	DrawText();
+	
 	glutSwapBuffers();
 }
 
@@ -339,7 +471,7 @@ void CMyRenderer::ResizeScene(const int aWidth, const int aHeight)
 	// Projection transformation
 	glMatrixMode(GL_PROJECTION); // Specifies which matrix stack is the target for matrix operations
 	glLoadIdentity(); // We initialize the projection matrix as identity
-	gluPerspective(60.0, (GLfloat)aWidth/(GLfloat)aHeight, 1.5, 100.0);
+	gluPerspective(60.0, (GLfloat)aWidth/(GLfloat)aHeight, 1.5, 500.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
