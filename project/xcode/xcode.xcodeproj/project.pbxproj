@@ -20,6 +20,9 @@
 		4385DD9E0AF0139D00039AED /* textures in Resources */ = {isa = PBXBuildFile; fileRef = 4385DD960AF0139D00039AED /* textures */; };
 		4385DDB10AF013B000039AED /* shader in Resources */ = {isa = PBXBuildFile; fileRef = 4385DDAD0AF013B000039AED /* shader */; };
 		4385DE7E0AF03C0100039AED /* 3ds in Resources */ = {isa = PBXBuildFile; fileRef = 4385DE750AF03C0100039AED /* 3ds */; };
+		43A6B1F80B165E4F00F870F0 /* 3dsmem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43A6B1F50B165E4F00F870F0 /* 3dsmem.cpp */; };
+		43A6B1F90B165E4F00F870F0 /* ati_3ds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43A6B1F60B165E4F00F870F0 /* ati_3ds.cpp */; };
+		43A6B1FA0B165E4F00F870F0 /* index_t.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43A6B1F70B165E4F00F870F0 /* index_t.cpp */; };
 		43ADFEF50AF00EF400189F6C /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADFEF30AF00EF400189F6C /* GLUT.framework */; };
 		43ADFEF60AF00EF400189F6C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ADFEF40AF00EF400189F6C /* OpenGL.framework */; };
 		43F3747C0AF2CACA00F6F227 /* ShaderAttributeObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43F3747A0AF2CACA00F6F227 /* ShaderAttributeObject.cpp */; };
@@ -43,6 +46,12 @@
 		4385DD960AF0139D00039AED /* textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = textures; path = ../../textures; sourceTree = SOURCE_ROOT; };
 		4385DDAD0AF013B000039AED /* shader */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shader; path = ../../shader; sourceTree = SOURCE_ROOT; };
 		4385DE750AF03C0100039AED /* 3ds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = 3ds; path = ../../3ds; sourceTree = SOURCE_ROOT; };
+		43A6B1AD0B16599900F870F0 /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Info copy.plist"; sourceTree = "<group>"; };
+		43A6B1F50B165E4F00F870F0 /* 3dsmem.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = 3dsmem.cpp; sourceTree = "<group>"; };
+		43A6B1F60B165E4F00F870F0 /* ati_3ds.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ati_3ds.cpp; sourceTree = "<group>"; };
+		43A6B1F70B165E4F00F870F0 /* index_t.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = index_t.cpp; sourceTree = "<group>"; };
+		43A6B1FB0B165E7600F870F0 /* ati_3ds.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ati_3ds.h; sourceTree = "<group>"; };
+		43A6B1FC0B165E7600F870F0 /* index_t.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = index_t.h; sourceTree = "<group>"; };
 		43ADFEF30AF00EF400189F6C /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
 		43ADFEF40AF00EF400189F6C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		43EE7A050AF2C1F70073D4ED /* 3ds.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = 3ds.h; sourceTree = "<group>"; };
@@ -64,7 +73,7 @@
 		43F3747A0AF2CACA00F6F227 /* ShaderAttributeObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderAttributeObject.cpp; sourceTree = "<group>"; };
 		43F3747B0AF2CACA00F6F227 /* ShaderUniformObject.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderUniformObject.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* parallaxmapping.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = parallaxmapping.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* parallaxmapping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = parallaxmapping.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +116,7 @@
 			children = (
 				32CA4F630368D1EE00C91783 /* xcode_Prefix.pch */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				43A6B1AD0B16599900F870F0 /* Info copy.plist */,
 			);
 			name = apple;
 			sourceTree = "<group>";
@@ -124,6 +134,8 @@
 		4385DD650AF012E700039AED /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				43A6B1FB0B165E7600F870F0 /* ati_3ds.h */,
+				43A6B1FC0B165E7600F870F0 /* index_t.h */,
 				43EE7A050AF2C1F70073D4ED /* 3ds.h */,
 				43EE7A060AF2C1F70073D4ED /* Basic.h */,
 				43EE7A070AF2C1F70073D4ED /* CMesh.h */,
@@ -148,6 +160,9 @@
 		4385DD760AF012E700039AED /* src */ = {
 			isa = PBXGroup;
 			children = (
+				43A6B1F50B165E4F00F870F0 /* 3dsmem.cpp */,
+				43A6B1F60B165E4F00F870F0 /* ati_3ds.cpp */,
+				43A6B1F70B165E4F00F870F0 /* index_t.cpp */,
 				4385DD770AF012E700039AED /* 3ds.cpp */,
 				4385DD780AF012E700039AED /* CMesh.cpp */,
 				4385DD790AF012E700039AED /* CMyRenderer.cpp */,
@@ -241,6 +256,9 @@
 				4385DD940AF012E700039AED /* TVertex.cpp in Sources */,
 				43F3747C0AF2CACA00F6F227 /* ShaderAttributeObject.cpp in Sources */,
 				43F3747D0AF2CACA00F6F227 /* ShaderUniformObject.cpp in Sources */,
+				43A6B1F80B165E4F00F870F0 /* 3dsmem.cpp in Sources */,
+				43A6B1F90B165E4F00F870F0 /* ati_3ds.cpp in Sources */,
+				43A6B1FA0B165E4F00F870F0 /* index_t.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
