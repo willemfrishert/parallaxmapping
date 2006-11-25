@@ -40,6 +40,9 @@ CMyRenderer::CMyRenderer()
 , iYRotation( 0 )
 , iOldXRotation( 0 )
 , iOldYRotation( 0 )
+, iXPosition( 0 )
+, iYPosition( 0 )
+, iZoom( 10 )
 {
 	InitMain();
 	CMyRenderer::iCurrentRenderer = this;
@@ -88,15 +91,21 @@ void CMyRenderer::InitShaders()
 
 	iShaderProgram->buildProgram();
 
-	// initialize multitexturing
-	glActiveTexture(GL_TEXTURE0 );
-	glBindTexture(GL_TEXTURE_2D, textureMapId);
+	ResetMultitexturing();
+}
 
-	glActiveTexture(GL_TEXTURE1 );
-	glBindTexture(GL_TEXTURE_2D, heightMapId);
+void CMyRenderer::LoadTextures()
+{
+	rockwallTextures[0] = loadTGATexture("textures/rockwall_rot.tga");
+	rockwallTextures[1] = loadTGATexture("textures/rockwall_height_rot.tga");
+	
+	// generate normal map using ATI's TGAtoDOT3 functions
+	rockwallTextures[2] = GenerateDOT3( heightMapId );
 
-	glActiveTexture(GL_TEXTURE2 );
-	glBindTexture(GL_TEXTURE_2D, normalMapId);
+	textureMapId	= rockwallTextures[0];
+	heightMapId		= rockwallTextures[1];
+	normalMapId		= rockwallTextures[2];
+
 }
 
 //
@@ -112,11 +121,26 @@ void CMyRenderer::InitMain()
 
 	textureMapId = loadTGATexture("textures/rockwall_rot.tga");
 	heightMapId = loadTGATexture("textures/rockwall_height_rot.tga");
-	//normalMapId = loadTGATexture("textures/rockwall_heightDOT3_rot.tga");
-
+	
+	// generate normal map using ATI's TGAtoDOT3 functions
 	normalMapId = GenerateDOT3( heightMapId );
 
 	InitShaders();
+}
+
+/**
+ */
+void CMyRenderer::ResetMultitexturing()
+{
+	// initialize multitexturing
+	glActiveTexture(GL_TEXTURE0 );
+	glBindTexture(GL_TEXTURE_2D, textureMapId);
+
+	glActiveTexture(GL_TEXTURE1 );
+	glBindTexture(GL_TEXTURE_2D, heightMapId);
+
+	glActiveTexture(GL_TEXTURE2 );
+	glBindTexture(GL_TEXTURE_2D, normalMapId);
 }
 
 void CMyRenderer::ReadPixel(GLubyte *image, GLubyte *pix, int x, int y, int width)
@@ -250,22 +274,29 @@ GLuint CMyRenderer::GenerateDOT3( GLuint aHeightMapId )
 
 
 
+
 /** \brief Method that creates a mesh
-*
-*   Creates an instance of a desired mesh type
-*/
+ *
+ *   Creates an instance of a desired mesh type
+ */
 void CMyRenderer::CreateScene()
 {
 	Load3ds modelLoader;
 	
 	//this->mesh = modelLoader.Create("3ds/plane.3ds");
-	this->mesh = modelLoader.CreateUsingATI("3ds/plane.3ds");
+	this->mesh = modelLoader.CreateUsingATI("3ds/teapot1.3ds");
+	this->wall = modelLoader.CreateUsingATI("3ds/wall.3ds");
 
 	//this->mesh->createInverseTBNMatrices();
 
+	// Set the TBN matrix attributes to the meshes
 	this->mesh->setBinormalAttributeObject( binormalAttributeObject );
 	this->mesh->setTangentAttributeObject( tangentAttributeObject );
 	this->mesh->setTBNNormalAttributeObject( tbnNormalAttributeObject );
+
+	this->wall->setBinormalAttributeObject( binormalAttributeObject );
+	this->wall->setTangentAttributeObject( tangentAttributeObject );
+	this->wall->setTBNNormalAttributeObject( tbnNormalAttributeObject );
 }
 
 
@@ -384,41 +415,77 @@ void CMyRenderer::RenderScene()
 
 	glPushMatrix();
 	{
-		glTranslatef(0, 0, -30);
+		glTranslatef(0, 0, -20);
 		glRotatef(this->iXRotation, 1, 0, 0);
 		glRotatef(this->iYRotation, 0, 1, 0);
-		//glScalef(0.1f, 0.1f, 0.1f);
 		this->mesh->draw();
+
+		drawRoom();
 	}
 	glPopMatrix();
 
-	angle += 1.5f;
+	//angle += 1.5f;
 	if (angle > 360)
 	{
 		angle -= 360;
 	}
 
 	iShaderProgram->disableProgram();
-
-	//glDisable( GL_LIGHTING );
-	//glPolygonMode(GL_FRONT, GL_LINE);
-	//glLineWidth( 4 );
-	//glColor3f(1,1,1);
-	//glPushMatrix();
-	//{
-	//	glTranslatef(0, 0, -80);
-	//	glRotatef(this->iXRotation, 1, 0, 0);
-	//	glRotatef(this->iYRotation, 0, 1, 0);
-	//	//glScalef(0.1f, 0.1f, 0.1f);
-	//	this->mesh->draw();
-	//}
-	//glPopMatrix();
-	//glEnable( GL_LIGHTING );
-	//glPolygonMode( GL_FRONT, GL_FILL );
 	
 	DrawText();
 	
 	glutSwapBuffers();
+}
+
+/**
+ * @description draws the cave room
+ */
+void CMyRenderer::drawRoom()
+{
+	// back wall
+	glPushMatrix();
+		glTranslatef(0, 0, -20);
+		this->wall->draw();
+	glPopMatrix();
+
+	// front wall
+	glPushMatrix();
+		glTranslatef(0, 0, 20);
+		glRotatef(180, 0, 1, 0);
+		this->wall->draw();
+	glPopMatrix();
+
+	// left wall
+	glPushMatrix();
+		glTranslatef(-20, 0, 0);
+		glRotatef(90, 0, 1, 0);
+		this->wall->draw();
+	glPopMatrix();
+
+	// right wall
+	glPushMatrix();
+		glTranslatef(20, 0, 0);
+		glRotatef(-90, 0, 1, 0);
+		this->wall->draw();
+	glPopMatrix();
+
+	// top wall
+	glPushMatrix();
+		glTranslatef(0, 20, 0);
+		glRotatef(90, 1, 0, 0);
+		// so, to align the texture
+		glRotatef(90, 0, 0, 1);
+		this->wall->draw();
+	glPopMatrix();
+
+	// bottom wall
+	glPushMatrix();
+		glTranslatef(0, -20, 0);
+		glRotatef(-90, 1, 0, 0);
+		// so, to align the texture
+		glRotatef(90, 0, 0, 1);
+		this->wall->draw();
+	glPopMatrix();
 }
 
 void CMyRenderer::SetXRotation(float aXRotation)
@@ -461,6 +528,36 @@ float CMyRenderer::GetOldYRotation()
 	return this->iOldYRotation;
 }
 
+void CMyRenderer::SetXPosition(float aXPosition)
+{
+	this->iXPosition = aXPosition;
+}
+
+void CMyRenderer::SetYPosition(float aYPosition)
+{
+	this->iYPosition = aYPosition;
+}
+
+float CMyRenderer::GetXPosition()
+{
+	return this->iXPosition;
+}
+
+float CMyRenderer::GetYPosition()
+{
+	return this->iYPosition;
+}
+
+void CMyRenderer::SetZoom( float aZoom )
+{
+	this->iZoom = aZoom;
+}
+
+float CMyRenderer::GetScreenHeightInPixels()
+{
+	return this->iScreenHeight;
+}
+
 //-----------------------------
 //resize the window
 //-----------------------------
@@ -476,6 +573,7 @@ void CMyRenderer::ResizeScene(const int aWidth, const int aHeight)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	this->iScreenHeight = aHeight;
 	// This command redraw the scene (it calls the same routine of glutDisplayFunc)
 	//glutPostRedisplay ();
 }
