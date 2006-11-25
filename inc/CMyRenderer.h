@@ -165,7 +165,9 @@ private:
 	// Scenario
 
 	CMesh* wall;
+	CMesh* column;
 	CMesh* mesh;
+
 	ShaderProgram* iShaderProgram;
 	ShaderObject* iVertexShader;
 	ShaderObject* iFragmentShader;
@@ -197,6 +199,7 @@ private:
 	// 0: texture map; 1: bump map; 2: normal map
 	GLuint rockwallTextures[3];
 	GLuint rocksTextures[3];
+	GLuint redbricksTextures[3];
 };
 
 
