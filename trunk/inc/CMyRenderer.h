@@ -79,6 +79,23 @@ public:
 	///Gets the Trackball's Y rotation
 	float GetOldYRotation();
 
+	///Sets the Trackball's X position
+	void SetXPosition(float aXPosition);
+
+	///Sets the Trackball's Y position
+	void SetYPosition(float aYPosition);
+
+	///Gets the Trackball's X position
+	float GetXPosition();
+
+	///Gets the Trackball's Y position
+	float GetYPosition();
+
+	void SetZoom(float aZoom);
+	float GetZoom();
+
+	float GetScreenHeightInPixels();
+
 
 	//GETTERS
 	//---------------------------------------
@@ -115,8 +132,16 @@ private:
 
 	GLuint GenerateDOT3( GLuint aHeightMapId );
 
+	// initializes the textures: texture map, bump map and normal map
+	void ResetMultitexturing();
+
+	// loads the textures
+	void LoadTextures();
+
 	//DRAWING FUNCTIONS
 	//------------------
+
+	void drawRoom();
 
 	//PUBLIC STATIC DATA
 	//------------------
@@ -137,6 +162,9 @@ private:
 
 	int iFrame;				//< Current frame number (used to approximate FPS)
 
+	// Scenario
+
+	CMesh* wall;
 	CMesh* mesh;
 	ShaderProgram* iShaderProgram;
 	ShaderObject* iVertexShader;
@@ -158,6 +186,17 @@ private:
 	float iYRotation;
 	float iOldXRotation;
 	float iOldYRotation;
+	float iXPosition;
+	float iYPosition;
+	float iZoom;
+	float iScreenHeight;
+
+	/************************************************************************/
+	/* TEMPORARY STUFF: MUST BE ORGANIZED IN SOME WAY!!!!!!!                */
+	/************************************************************************/
+	// 0: texture map; 1: bump map; 2: normal map
+	GLuint rockwallTextures[3];
+	GLuint rocksTextures[3];
 };
 
 
