@@ -96,11 +96,26 @@ void CMyRenderer::InitShaders()
 
 void CMyRenderer::LoadTextures()
 {
+	// ##################### ROCK WALL ###########################
 	rockwallTextures[0] = loadTGATexture("textures/rockwall_rot.tga");
 	rockwallTextures[1] = loadTGATexture("textures/rockwall_height_rot.tga");
 	
 	// generate normal map using ATI's TGAtoDOT3 functions
-	rockwallTextures[2] = GenerateDOT3( heightMapId );
+	rockwallTextures[2] = GenerateDOT3( rockwallTextures[1] );
+
+	// ##################### ROCKS ############################
+	rocksTextures[0] = loadTGATexture("textures/rocks.tga");
+	rocksTextures[1] = loadTGATexture("textures/rocks_height.tga");
+
+	// generate normal map using ATI's TGAtoDOT3 functions
+	rocksTextures[2] = GenerateDOT3( rocksTextures[1] );
+
+	// ##################### RED BRICKS ############################
+	redbricksTextures[0] = loadTGATexture("textures/redbricks.tga");
+	redbricksTextures[1] = loadTGATexture("textures/redbricks_height.tga");
+
+	// generate normal map using ATI's TGAtoDOT3 functions
+	redbricksTextures[2] = GenerateDOT3( redbricksTextures[1] );
 
 	textureMapId	= rockwallTextures[0];
 	heightMapId		= rockwallTextures[1];
@@ -119,11 +134,8 @@ void CMyRenderer::InitMain()
 	glEnable(GL_CULL_FACE); // Enable the back face culling
 	glEnable(GL_DEPTH_TEST); // Enable the depth test (z-buffer)
 
-	textureMapId = loadTGATexture("textures/rockwall_rot.tga");
-	heightMapId = loadTGATexture("textures/rockwall_height_rot.tga");
-	
-	// generate normal map using ATI's TGAtoDOT3 functions
-	normalMapId = GenerateDOT3( heightMapId );
+	// Load all the necessary textures
+	LoadTextures();
 
 	InitShaders();
 }
@@ -286,6 +298,7 @@ void CMyRenderer::CreateScene()
 	//this->mesh = modelLoader.Create("3ds/plane.3ds");
 	this->mesh = modelLoader.CreateUsingATI("3ds/teapot1.3ds");
 	this->wall = modelLoader.CreateUsingATI("3ds/wall.3ds");
+	this->column = modelLoader.CreateUsingATI("3ds/column.3ds");
 
 	//this->mesh->createInverseTBNMatrices();
 
@@ -297,6 +310,10 @@ void CMyRenderer::CreateScene()
 	this->wall->setBinormalAttributeObject( binormalAttributeObject );
 	this->wall->setTangentAttributeObject( tangentAttributeObject );
 	this->wall->setTBNNormalAttributeObject( tbnNormalAttributeObject );
+
+	this->column->setBinormalAttributeObject( binormalAttributeObject );
+	this->column->setTangentAttributeObject( tangentAttributeObject );
+	this->column->setTBNNormalAttributeObject( tbnNormalAttributeObject );
 }
 
 
@@ -415,12 +432,36 @@ void CMyRenderer::RenderScene()
 
 	glPushMatrix();
 	{
+		/************************************************************************/
+		/* TODO: CHANGE TEXTURE TO ROCKS: MUST BE REFACTORED !!!!!!             */
+		/************************************************************************/
+		textureMapId	= rocksTextures[0];
+		heightMapId		= rocksTextures[1];
+		normalMapId		= rocksTextures[2];
+		ResetMultitexturing();
+
 		glTranslatef(0, 0, -20);
 		glRotatef(this->iXRotation, 1, 0, 0);
 		glRotatef(this->iYRotation, 0, 1, 0);
 		this->mesh->draw();
 
+		/************************************************************************/
+		/* TODO: CHANGE TEXTURE TO ROCK WALL: MUST BE REFACTORED !!!!!!         */
+		/************************************************************************/
+		textureMapId	= rockwallTextures[0];
+		heightMapId		= rockwallTextures[1];
+		normalMapId		= rockwallTextures[2];
+		ResetMultitexturing();
 		drawRoom();
+
+		/************************************************************************/
+		/* TODO: CHANGE TEXTURE TO RED BRICKS WALL: MUST BE REFACTORED !!!!!!   */
+		/************************************************************************/
+		textureMapId	= redbricksTextures[0];
+		heightMapId		= redbricksTextures[1];
+		normalMapId		= redbricksTextures[2];
+		ResetMultitexturing();
+		this->column->draw();
 	}
 	glPopMatrix();
 
