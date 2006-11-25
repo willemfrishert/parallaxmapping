@@ -181,6 +181,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\3dsmem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\ati_3ds.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\CMesh.cpp"
 				>
 			</File>
@@ -194,6 +202,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\ExtensionsLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\index_t.cpp"
 				>
 			</File>
 			<File
@@ -235,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\inc\ati_3ds.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\inc\Basic.h"
 				>
 			</File>
@@ -252,6 +268,10 @@
 			</File>
 			<File
 				RelativePath="..\..\inc\ExtensionsLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\inc\index_t.h"
 				>
 			</File>
 			<File
