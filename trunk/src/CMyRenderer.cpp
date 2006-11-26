@@ -410,7 +410,8 @@ void CMyRenderer::RenderScene()
 	//glDisable(GL_LIGHTING);
 	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
 	GLfloat specular[4] = {1, 1, 1, 1.0};
-	GLfloat light_pos[4] = {1.5f, 0.0f, 1.0f, 0};
+	GLfloat directionalLight[4] = {0.0f, 1.0f, 1.0f, 0};
+	GLfloat positionalLight[4] = {0.0f, 0.0f, 10.0f, 1.0f};
 	GLfloat shininess = 10;
 
 	// since we are scaling (in our particular case, uniform scaling) 
@@ -418,10 +419,12 @@ void CMyRenderer::RenderScene()
 	//glEnable(GL_RESCALE_NORMAL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glPushMatrix();
-		glRotatef(angle, 0, 0, 1);
-		glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-	glPopMatrix();
+	glEnable(GL_LIGHT1);
+
+	// Directional Light
+	glLightfv(GL_LIGHT0, GL_POSITION, directionalLight);
+
+	
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 	//glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
 	//glMaterialf(GL_FRONT, GL_SHININESS, shininess);
@@ -430,8 +433,22 @@ void CMyRenderer::RenderScene()
 	glEnable(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D, heightMapId);
 
+	
+
 	glPushMatrix();
 	{
+		glTranslatef(0, 0, -15);
+		glRotatef(this->iXRotation, 1, 0, 0);
+		glRotatef(this->iYRotation, 0, 1, 0);
+
+		// Positional Light
+		glPushMatrix();
+			glRotatef(angle, 0, 1, 0);
+			glLightfv(GL_LIGHT1, GL_POSITION, positionalLight);
+			//glutSolidSphere(5, 16, 16);
+		glPopMatrix();
+
+
 		/************************************************************************/
 		/* TODO: CHANGE TEXTURE TO ROCKS: MUST BE REFACTORED !!!!!!             */
 		/************************************************************************/
@@ -439,11 +456,8 @@ void CMyRenderer::RenderScene()
 		heightMapId		= rocksTextures[1];
 		normalMapId		= rocksTextures[2];
 		ResetMultitexturing();
-
-		glTranslatef(0, 0, -20);
-		glRotatef(this->iXRotation, 1, 0, 0);
-		glRotatef(this->iYRotation, 0, 1, 0);
 		this->mesh->draw();
+		
 
 		/************************************************************************/
 		/* TODO: CHANGE TEXTURE TO ROCK WALL: MUST BE REFACTORED !!!!!!         */
@@ -453,7 +467,6 @@ void CMyRenderer::RenderScene()
 		normalMapId		= rockwallTextures[2];
 		ResetMultitexturing();
 		drawRoom();
-
 		/************************************************************************/
 		/* TODO: CHANGE TEXTURE TO RED BRICKS WALL: MUST BE REFACTORED !!!!!!   */
 		/************************************************************************/
@@ -465,7 +478,7 @@ void CMyRenderer::RenderScene()
 	}
 	glPopMatrix();
 
-	//angle += 1.5f;
+	angle += 1.5f;
 	if (angle > 360)
 	{
 		angle -= 360;
