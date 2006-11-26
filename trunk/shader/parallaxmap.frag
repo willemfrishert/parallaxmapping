@@ -7,12 +7,19 @@ uniform sampler2D normalMap;
 varying vec4 passColor;
 
 // The transformed light direction and view direction
-varying vec3 lightDir;
+varying vec3 directionalLightDir;
+varying vec3 positionalLightDir;
 varying vec3 viewDir;
+
+// ############### FUNCTIONS ########################
+vec3 getScaledBiasedNormal(vec2 texCoord);
+float computeDiffuse(vec3 directionalLightDir, vec3 positionalLightDir, 
+					vec3 normal, int directionalId, int positionalId);
 
 void main() 
 {
-	vec3 lightDirNormalized = normalize( lightDir );
+	vec3 directionalLightDirNormalized = normalize( directionalLightDir );
+	vec3 positionalLightDirNormalized = normalize( positionalLightDir );
 	vec3 viewDirNormalized = normalize( viewDir );
 	//vec3 normalNormalized = normalize( normal );
 	
@@ -29,25 +36,41 @@ void main()
 	vec2 tOffset = t0 + hSB * texture2D(normalMap, t0).z * viewDirNormalized.xy;
 	
 	// Get the displaced normal of the normal map
-	vec3 bumpNormal = vec3(texture2D(normalMap, tOffset));
+	vec3 bumpNormal = getScaledBiasedNormal( tOffset );
+	
+	// Find the dot product between the light direction and the normal
+	float NdotL = computeDiffuse(directionalLightDirNormalized, positionalLightDirNormalized, 
+					bumpNormal, 0, 1);
+	
+	vec4 parallaxColor = texture2D(textureMap, tOffset);
+	
+	// Calculate the final color gl_FragColor
+	vec4 diffuse = vec4(NdotL * parallaxColor.rgb, parallaxColor.a);
+	//diffuse = vec4(NdotL, NdotL, NdotL, 1.0);
+
+	gl_FragColor = diffuse;
+}
+
+vec3 getScaledBiasedNormal(vec2 texCoord)
+{
+	vec3 bumpNormal = vec3(texture2D(normalMap, texCoord));
 	
 	// scaling and biasing because the bump normal was reverse scaled
 	// to [0, 1] before it was saved
 	bumpNormal = (bumpNormal - 0.5) * 2.0;
 	bumpNormal = normalize( bumpNormal );
 
-	bumpNormal = gl_NormalMatrix * bumpNormal;
-	
+	// the bumpNormal is already in tangent space, so it doesn't need
+	// any additional transformation at all
+	return bumpNormal;
+}
+
+float computeDiffuse(vec3 directionalLightDir, vec3 positionalLightDir, 
+					vec3 normal, int directionalId, int positionalId)
+{
 	// Find the dot product between the light direction and the normal
-	float NdotL = max(dot(bumpNormal, lightDirNormalized), 0.0);
-	
-	vec4 parallaxColor = texture2D(textureMap, tOffset);
-	
-	// Calculate the final color gl_FragColor
-	vec3 diffuse = NdotL * parallaxColor.rgb; 
-	
-	gl_FragColor = vec4(diffuse, parallaxColor.a);
-//	gl_FragColor = vec4(NdotL, NdotL, NdotL, 1.0);
-//	gl_FragColor = vec4(bumpNormal, 1.0);
-//	gl_FragColor = texture2D(normalMap, t0);
+	float directionalIntensity = max(dot(normal, directionalLightDir), 0.0);
+	float positionalIntensity = max(dot(normal, positionalLightDir), 0.0);
+
+	return /*directionalIntensity + */positionalIntensity;
 }
