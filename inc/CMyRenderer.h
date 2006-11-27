@@ -139,7 +139,10 @@ private:
 	void LoadTextures();
 
 	// Computes the positional moving light position
-	void ComputeFarLightPosition(float* position, float radius, float alpha, float cosineFreq, float height);
+	void ComputeLightPosition(float* position, float radius, float alpha, float cosineFreq, float height);
+
+	// Dinamically computes lights positions
+	void ComputeLightsPositions();
 
 	//DRAWING FUNCTIONS
 	//------------------
@@ -203,6 +206,17 @@ private:
 	GLuint rockwallTextures[3];
 	GLuint rocksTextures[3];
 	GLuint redbricksTextures[3];
+
+	GLuint sprite;
+
+	// Lights definitions
+	GLfloat light1Position[4];
+	GLfloat light0Position[4];
+	GLfloat light2Position[4];
+
+	GLfloat diffuse0[4];
+	GLfloat diffuse1[4];
+	GLfloat diffuse2[4];
 };
 
 
