@@ -133,10 +133,13 @@ private:
 	GLuint GenerateDOT3( GLuint aHeightMapId );
 
 	// initializes the textures: texture map, bump map and normal map
-	void ResetMultitexturing();
+	void ResetMultitexturing(GLuint* textureIds);
 
 	// loads the textures
 	void LoadTextures();
+
+	// Computes the positional moving light position
+	void ComputeFarLightPosition(float* position, float radius, float alpha, float cosineFreq, float height);
 
 	//DRAWING FUNCTIONS
 	//------------------
@@ -166,7 +169,7 @@ private:
 
 	CMesh* wall;
 	CMesh* column;
-	CMesh* mesh;
+	CMesh* teapot;
 
 	ShaderProgram* iShaderProgram;
 	ShaderObject* iVertexShader;
