@@ -7,19 +7,24 @@ uniform sampler2D normalMap;
 varying vec4 passColor;
 
 // The transformed light direction and view direction
-varying vec3 directionalLightDir;
-varying vec3 positionalLightDir;
+varying vec3 light0Dir;
+varying vec3 light1Dir;
+varying vec3 light2Dir;
+varying float light0Distance;
+varying float light1Distance;
+varying float light2Distance;
+
+// The view direction in tangent space
 varying vec3 viewDir;
 
 // ############### FUNCTIONS ########################
 vec3 getScaledBiasedNormal(vec2 texCoord);
-float computeDiffuse(vec3 directionalLightDir, vec3 positionalLightDir, 
-					vec3 normal, int directionalId, int positionalId);
+vec4 computeDiffuse(vec3 normal, vec4 textureColor);
 
 void main() 
 {
-	vec3 directionalLightDirNormalized = normalize( directionalLightDir );
-	vec3 positionalLightDirNormalized = normalize( positionalLightDir );
+	vec3 light0DirNormalized = normalize( light0Dir );
+	vec3 light1DirNormalized = normalize( light1Dir );
 	vec3 viewDirNormalized = normalize( viewDir );
 	//vec3 normalNormalized = normalize( normal );
 	
@@ -38,17 +43,17 @@ void main()
 	// Get the displaced normal of the normal map
 	vec3 bumpNormal = getScaledBiasedNormal( tOffset );
 	
-	// Find the dot product between the light direction and the normal
-	float NdotL = computeDiffuse(directionalLightDirNormalized, positionalLightDirNormalized, 
-					bumpNormal, 0, 1);
-	
 	vec4 parallaxColor = texture2D(textureMap, tOffset);
+
+	// Find the dot product between the light direction and the normal
+	vec4 color = computeDiffuse(bumpNormal, parallaxColor);
 	
 	// Calculate the final color gl_FragColor
-	vec4 diffuse = vec4(NdotL * parallaxColor.rgb, parallaxColor.a);
+	//vec4 diffuse = vec4(NdotL * parallaxColor.rgb, parallaxColor.a);
+	//vec4 diffuse = vec4(color + parallaxColor.rgb, parallaxColor.a);
 	//diffuse = vec4(NdotL, NdotL, NdotL, 1.0);
 
-	gl_FragColor = diffuse;
+	gl_FragColor = color;
 }
 
 vec3 getScaledBiasedNormal(vec2 texCoord)
@@ -65,12 +70,20 @@ vec3 getScaledBiasedNormal(vec2 texCoord)
 	return bumpNormal;
 }
 
-float computeDiffuse(vec3 directionalLightDir, vec3 positionalLightDir, 
-					vec3 normal, int directionalId, int positionalId)
+vec4 computeDiffuse(vec3 normal, vec4 textureColor)
 {
 	// Find the dot product between the light direction and the normal
-	float directionalIntensity = max(dot(normal, directionalLightDir), 0.0);
-	float positionalIntensity = max(dot(normal, positionalLightDir), 0.0);
+	float light0Intensity = max(dot(normal, light0Dir), 0.0);
+	float light1Intensity = max(dot(normal, light1Dir), 0.0);
+	float light2Intensity = max(dot(normal, light2Dir), 0.0);
 
-	return /*directionalIntensity + */positionalIntensity;
+	vec3 diffuse0 = gl_LightSource[0].diffuse.rgb;
+	vec3 diffuse1 = gl_LightSource[1].diffuse.rgb;
+	vec3 diffuse2 = gl_LightSource[2].diffuse.rgb;
+
+	vec3 finalColor = light0Intensity * diffuse0 * textureColor.rgb * (1.0 / (light0Distance * 0.3))
+		+ light1Intensity * diffuse1 * textureColor.rgb
+		+ light2Intensity * diffuse2 * textureColor.rgb * (1.0 / (light2Distance * 0.5));
+
+	return vec4(clamp(finalColor, 0.0, 1.0), textureColor.a);
 }
