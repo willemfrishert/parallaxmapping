@@ -114,6 +114,11 @@ void CMyRenderer::LoadTextures()
 
 	// generate normal map using ATI's TGAtoDOT3 functions
 	redbricksTextures[2] = GenerateDOT3( redbricksTextures[1] );
+
+	/************************************************************************/
+	/* SPRITE!!!!                                                           */
+	/************************************************************************/
+	sprite = loadTGATexture("textures/particlered.tga");
 }
 
 //
@@ -131,6 +136,8 @@ void CMyRenderer::InitMain()
 	LoadTextures();
 
 	InitShaders();
+
+	InitLights();
 }
 
 /**
@@ -290,7 +297,7 @@ void CMyRenderer::CreateScene()
 	Load3ds modelLoader;
 	
 	//this->mesh = modelLoader.Create("3ds/plane.3ds");
-	this->teapot = modelLoader.CreateUsingATI("3ds/teapot1.3ds");
+	this->teapot = modelLoader.CreateUsingATI("3ds/teapot3.3ds");
 	this->wall = modelLoader.CreateUsingATI("3ds/wall.3ds");
 	this->column = modelLoader.CreateUsingATI("3ds/column.3ds");
 
@@ -383,17 +390,83 @@ void CMyRenderer::DrawText() const
 
 // *************	RENDERING METHODS *********** /
 
-void CMyRenderer::ComputeFarLightPosition( float* position, float radius, float alpha, 
-										  float cosineFreq, float height )
+void CMyRenderer::ComputeLightPosition( float* position, float radius, float alpha, 
+									   float cosineFreq, float height )
 {
+	alpha = (alpha * (2 * 3.1459)) / 360.0f;
 	position[0] = radius * sinf( alpha );
 	position[1] = height * cosf( cosineFreq * alpha );
 	position[2] = radius * cosf( alpha );
+	position[3] = 1.0f;
 }
 
-/** \brief Method that specifies how the screen is rendered
-*/
+void CMyRenderer::InitLights()
+{
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
 
+	diffuse0[0] = 1;
+	diffuse0[1] = 1;
+	diffuse0[2] = 1;
+	diffuse0[3] = 1.0f;
+
+	diffuse1[0] = 0.5f;
+	diffuse1[1] = 0.5f;
+	diffuse1[2] = 0.2f;
+	diffuse1[3] = 1.0f;
+
+	diffuse2[0] = 0.6f;
+	diffuse2[1] = 0.6f;
+	diffuse2[2] = 1.0f;
+	diffuse2[3] = 1.0f;
+
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse2);
+}
+
+void CMyRenderer::ComputeLightsPositions()
+{
+	static float alpha0 = 0.0f;
+	static float alpha1 = 120.0f;
+	static float alpha2 = 240.0f;
+
+	//ComputeLightPosition(light0Position, 10.0f, alpha0, 0.0f, 0.0f);
+	light0Position[0] = 0.0;
+	light0Position[1] = 7.0;
+	light0Position[2] = 7.0;
+	light0Position[3] = 1.0f;
+
+	ComputeLightPosition(light1Position, 10.0f, alpha1, 0.0f, 0.0f);
+	ComputeLightPosition(light2Position, 19.0f, alpha2, 0.0f, -5.0f);
+
+	alpha0 += 2.0f;
+
+	if ( alpha0 > 360.0f)
+	{
+		alpha0 -= 360.0f;
+	}
+
+	alpha1 += 2.0f;
+
+	if ( alpha1 > 360.0f)
+	{
+		alpha1 -= 360.0f;
+	}
+
+	alpha2 += 2.0f;
+
+	if ( alpha2 > 360.0f)
+	{
+		alpha2 -= 360.0f;
+	}
+}
+
+/** 
+ *\brief Method that specifies how the screen is rendered
+ */
 void CMyRenderer::RenderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -403,63 +476,72 @@ void CMyRenderer::RenderScene()
 
 	// Draw Text
 	FramesPerSec();
-	
 
-	iShaderProgram->useProgram();
+	/*iShaderProgram->useProgram();
 
-	//glPolygonMode ( GL_FRONT, GL_FILL );
-	//glPointSize( 2.0f );
-	//glDisable(GL_LIGHTING);
-	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
-	GLfloat specular[4] = {1, 1, 1, 1.0};
-	GLfloat light1[4] = {0.0f, 1.0f, 1.0f, 0};
-	GLfloat light2[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-	GLfloat shininess = 10;
-
-	// since we are scaling (in our particular case, uniform scaling) 
-	// the object, the normals need to be rescaled
-	//glEnable(GL_RESCALE_NORMAL);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-
-	// Directional Light
-	glLightfv(GL_LIGHT0, GL_POSITION, light1);
-
-	
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-	//glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-
-	//glDisable(GL_TEXTURE_2D);
-	glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D, heightMapId);
-
+	glEnable(GL_TEXTURE_2D);*/
 
 	glPushMatrix();
 	{
-		static float alpha1 = 0.0f;
-		glTranslatef(0, 0, -15);
+		glTranslatef(0, 0, -25);
+		
+		// Head Light
+		glPushMatrix();
+			glLightfv(GL_LIGHT0, GL_POSITION, light0Position);
+		glPopMatrix();
+		
 		glRotatef(this->iXRotation, 1, 0, 0);
 		glRotatef(this->iYRotation, 0, 1, 0);
 
-		ComputeFarLightPosition(light1, 19.0f, alpha1, 6.0f, 5.0f);
+		ComputeLightsPositions();
 
-		// Positional Light
+		/************************************************************************/
+		/* LIGHTS !!!!                                                          */
+		/************************************************************************/
 		glPushMatrix();
-			//glRotatef(angle, 0, 1, 0);
-			glTranslatef(light1[0], light1[1], light1[2]);
-			glLightfv(GL_LIGHT1, GL_POSITION, light2);
-			glutSolidSphere(1, 16, 16);
-
-			alpha1 += 0.03f;
-
-			if ( alpha1 > 360.0f)
-			{
-				alpha1 -= 360.0f;
-			}
+			glRotatef(-45, 0, 0, 1);
+			glLightfv(GL_LIGHT1, GL_POSITION, light1Position);
+			glTranslatef(light1Position[0], light1Position[1], light1Position[2]);
+			/************************************************************************/
+			/*                                                                      */
+			/************************************************************************/
+			//glDepthMask(GL_FALSE);
+			glDisable(GL_ALPHA_TEST); 
+			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+			glEnable(GL_BLEND);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glDisable(GL_LIGHTING);
+			
+			glPointSize( 30.0 );
+			glActiveTexture(GL_TEXTURE0 );
+			glBindTexture(GL_TEXTURE_2D, sprite);
+			glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
+			//glTexEnvi(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			
+			glEnable(GL_POINT_SPRITE);
+			glBegin(GL_POINTS);
+				glVertex3f(0, 0, 0);
+			glEnd();
+			glDisable(GL_POINT_SPRITE);
+			//glutSolidSphere(0.3f, 16, 16);
+			glEnable(GL_LIGHTING);
+			glDisable(GL_BLEND);
+			//glEnable(GL_ALPHA_TEST);
+			//glDepthMask(GL_TRUE);
+			/************************************************************************/
+			/*                                                                      */
+			/************************************************************************/
+		glPopMatrix();
+		
+		glPushMatrix();
+			glLightfv(GL_LIGHT2, GL_POSITION, light2Position);
+			glTranslatef(light2Position[0], light2Position[1], light2Position[2]);
+			glutSolidSphere(0.3f, 16, 16);
 		glPopMatrix();
 
+		iShaderProgram->useProgram();
+
+		glEnable(GL_TEXTURE_2D);
 
 		// Change texture and draw the teapot
 		ResetMultitexturing( rocksTextures );
@@ -471,7 +553,7 @@ void CMyRenderer::RenderScene()
 		
 		// Change texture and draw the column
 		ResetMultitexturing( redbricksTextures );
-		this->column->draw();
+		//this->column->draw();
 	}
 	glPopMatrix();
 
@@ -493,36 +575,38 @@ void CMyRenderer::RenderScene()
  */
 void CMyRenderer::drawRoom()
 {
+	float delta = 19.9;
+
 	// back wall
 	glPushMatrix();
-		glTranslatef(0, 0, -20);
+		glTranslatef(0, 0, -delta);
 		this->wall->draw();
 	glPopMatrix();
 
 	// front wall
 	glPushMatrix();
-		glTranslatef(0, 0, 20);
+		glTranslatef(0, 0, delta);
 		glRotatef(180, 0, 1, 0);
 		this->wall->draw();
 	glPopMatrix();
 
 	// left wall
 	glPushMatrix();
-		glTranslatef(-20, 0, 0);
+		glTranslatef(-delta, 0, 0);
 		glRotatef(90, 0, 1, 0);
 		this->wall->draw();
 	glPopMatrix();
 
 	// right wall
 	glPushMatrix();
-		glTranslatef(20, 0, 0);
+		glTranslatef(delta, 0, 0);
 		glRotatef(-90, 0, 1, 0);
 		this->wall->draw();
 	glPopMatrix();
 
 	// top wall
 	glPushMatrix();
-		glTranslatef(0, 20, 0);
+		glTranslatef(0, delta, 0);
 		glRotatef(90, 1, 0, 0);
 		// so, to align the texture
 		glRotatef(90, 0, 0, 1);
@@ -531,7 +615,7 @@ void CMyRenderer::drawRoom()
 
 	// bottom wall
 	glPushMatrix();
-		glTranslatef(0, -20, 0);
+		glTranslatef(0, -delta, 0);
 		glRotatef(-90, 1, 0, 0);
 		// so, to align the texture
 		glRotatef(90, 0, 0, 1);
