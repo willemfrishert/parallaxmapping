@@ -90,8 +90,6 @@ void CMyRenderer::InitShaders()
 	iShaderProgram->addUniformObject( normalMapUniformObject );
 
 	iShaderProgram->buildProgram();
-
-	ResetMultitexturing();
 }
 
 void CMyRenderer::LoadTextures()
@@ -116,11 +114,6 @@ void CMyRenderer::LoadTextures()
 
 	// generate normal map using ATI's TGAtoDOT3 functions
 	redbricksTextures[2] = GenerateDOT3( redbricksTextures[1] );
-
-	textureMapId	= rockwallTextures[0];
-	heightMapId		= rockwallTextures[1];
-	normalMapId		= rockwallTextures[2];
-
 }
 
 //
@@ -141,18 +134,19 @@ void CMyRenderer::InitMain()
 }
 
 /**
+ * @param textureIds: 0: textureMap; 1: heightMap; 2: normalMap
  */
-void CMyRenderer::ResetMultitexturing()
+void CMyRenderer::ResetMultitexturing( GLuint* textureIds )
 {
 	// initialize multitexturing
 	glActiveTexture(GL_TEXTURE0 );
-	glBindTexture(GL_TEXTURE_2D, textureMapId);
+	glBindTexture(GL_TEXTURE_2D, textureIds[0]);
 
 	glActiveTexture(GL_TEXTURE1 );
-	glBindTexture(GL_TEXTURE_2D, heightMapId);
+	glBindTexture(GL_TEXTURE_2D, textureIds[1]);
 
 	glActiveTexture(GL_TEXTURE2 );
-	glBindTexture(GL_TEXTURE_2D, normalMapId);
+	glBindTexture(GL_TEXTURE_2D, textureIds[2]);
 }
 
 void CMyRenderer::ReadPixel(GLubyte *image, GLubyte *pix, int x, int y, int width)
@@ -296,16 +290,16 @@ void CMyRenderer::CreateScene()
 	Load3ds modelLoader;
 	
 	//this->mesh = modelLoader.Create("3ds/plane.3ds");
-	this->mesh = modelLoader.CreateUsingATI("3ds/teapot1.3ds");
+	this->teapot = modelLoader.CreateUsingATI("3ds/teapot1.3ds");
 	this->wall = modelLoader.CreateUsingATI("3ds/wall.3ds");
 	this->column = modelLoader.CreateUsingATI("3ds/column.3ds");
 
 	//this->mesh->createInverseTBNMatrices();
 
 	// Set the TBN matrix attributes to the meshes
-	this->mesh->setBinormalAttributeObject( binormalAttributeObject );
-	this->mesh->setTangentAttributeObject( tangentAttributeObject );
-	this->mesh->setTBNNormalAttributeObject( tbnNormalAttributeObject );
+	this->teapot->setBinormalAttributeObject( binormalAttributeObject );
+	this->teapot->setTangentAttributeObject( tangentAttributeObject );
+	this->teapot->setTBNNormalAttributeObject( tbnNormalAttributeObject );
 
 	this->wall->setBinormalAttributeObject( binormalAttributeObject );
 	this->wall->setTangentAttributeObject( tangentAttributeObject );
@@ -389,6 +383,14 @@ void CMyRenderer::DrawText() const
 
 // *************	RENDERING METHODS *********** /
 
+void CMyRenderer::ComputeFarLightPosition( float* position, float radius, float alpha, 
+										  float cosineFreq, float height )
+{
+	position[0] = radius * sinf( alpha );
+	position[1] = height * cosf( cosineFreq * alpha );
+	position[2] = radius * cosf( alpha );
+}
+
 /** \brief Method that specifies how the screen is rendered
 */
 
@@ -410,8 +412,8 @@ void CMyRenderer::RenderScene()
 	//glDisable(GL_LIGHTING);
 	GLfloat diffuse[4] = {0.8f, 0, 0, 1.0};
 	GLfloat specular[4] = {1, 1, 1, 1.0};
-	GLfloat directionalLight[4] = {0.0f, 1.0f, 1.0f, 0};
-	GLfloat positionalLight[4] = {0.0f, 0.0f, 10.0f, 1.0f};
+	GLfloat light1[4] = {0.0f, 1.0f, 1.0f, 0};
+	GLfloat light2[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 	GLfloat shininess = 10;
 
 	// since we are scaling (in our particular case, uniform scaling) 
@@ -422,7 +424,7 @@ void CMyRenderer::RenderScene()
 	glEnable(GL_LIGHT1);
 
 	// Directional Light
-	glLightfv(GL_LIGHT0, GL_POSITION, directionalLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, light1);
 
 	
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
@@ -433,47 +435,42 @@ void CMyRenderer::RenderScene()
 	glEnable(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D, heightMapId);
 
-	
 
 	glPushMatrix();
 	{
+		static float alpha1 = 0.0f;
 		glTranslatef(0, 0, -15);
 		glRotatef(this->iXRotation, 1, 0, 0);
 		glRotatef(this->iYRotation, 0, 1, 0);
 
+		ComputeFarLightPosition(light1, 19.0f, alpha1, 6.0f, 5.0f);
+
 		// Positional Light
 		glPushMatrix();
-			glRotatef(angle, 0, 1, 0);
-			glLightfv(GL_LIGHT1, GL_POSITION, positionalLight);
-			//glutSolidSphere(5, 16, 16);
+			//glRotatef(angle, 0, 1, 0);
+			glTranslatef(light1[0], light1[1], light1[2]);
+			glLightfv(GL_LIGHT1, GL_POSITION, light2);
+			glutSolidSphere(1, 16, 16);
+
+			alpha1 += 0.03f;
+
+			if ( alpha1 > 360.0f)
+			{
+				alpha1 -= 360.0f;
+			}
 		glPopMatrix();
 
 
-		/************************************************************************/
-		/* TODO: CHANGE TEXTURE TO ROCKS: MUST BE REFACTORED !!!!!!             */
-		/************************************************************************/
-		textureMapId	= rocksTextures[0];
-		heightMapId		= rocksTextures[1];
-		normalMapId		= rocksTextures[2];
-		ResetMultitexturing();
-		this->mesh->draw();
+		// Change texture and draw the teapot
+		ResetMultitexturing( rocksTextures );
+		this->teapot->draw();
 		
-
-		/************************************************************************/
-		/* TODO: CHANGE TEXTURE TO ROCK WALL: MUST BE REFACTORED !!!!!!         */
-		/************************************************************************/
-		textureMapId	= rockwallTextures[0];
-		heightMapId		= rockwallTextures[1];
-		normalMapId		= rockwallTextures[2];
-		ResetMultitexturing();
+		// Change texture and draw the room walls
+		ResetMultitexturing( rockwallTextures );
 		drawRoom();
-		/************************************************************************/
-		/* TODO: CHANGE TEXTURE TO RED BRICKS WALL: MUST BE REFACTORED !!!!!!   */
-		/************************************************************************/
-		textureMapId	= redbricksTextures[0];
-		heightMapId		= redbricksTextures[1];
-		normalMapId		= redbricksTextures[2];
-		ResetMultitexturing();
+		
+		// Change texture and draw the column
+		ResetMultitexturing( redbricksTextures );
 		this->column->draw();
 	}
 	glPopMatrix();
