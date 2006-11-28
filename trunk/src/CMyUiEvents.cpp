@@ -83,15 +83,11 @@ void CMyUiEvents::ProcessMouseEvent( int button, int state, int x, int y )
 	case GLUT_RIGHT_BUTTON:
 		if(GLUT_UP == state)
 		{
-			iMouseButtonDown = EMouseDownRight;
-			//Wait until change is ok
-			//while(iRenderer->TransformInProcess());
-			//TVector3 mp = iRenderer->MeshPosition();
-			//iRenderer->SetMeshPosition( x, y, mp.Z() );
+			iMouseButtonDown = EMouseUp;
 		}
 		else
 		{
-			iMouseButtonDown = EMouseUp;
+			iMouseButtonDown = EMouseDownRight;
 		}
 		break;
 	default:
@@ -108,6 +104,11 @@ void CMyUiEvents::ProcessMouseMotionEvent( int x, int y )
 			+ (float)(y - this->iMouseY) / 4.0);
 		this->iRenderer->SetYRotation( this->iRenderer->GetOldYRotation() 
 			+ (float)(x - this->iMouseX) / 4.0);
+	}
+	else if( EMouseDownRight == iMouseButtonDown)
+	{
+		this->iRenderer->SetZoom(this->iRenderer->GetZoom()+(((float)y - (float)this->iMouseY) / this->iRenderer->GetScreenHeightInPixels()) * 20);
+		this->iMouseY = y;
 	}
 }
 
