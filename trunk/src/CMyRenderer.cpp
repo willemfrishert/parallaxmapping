@@ -42,7 +42,7 @@ CMyRenderer::CMyRenderer()
 , iOldYRotation( 0 )
 , iXPosition( 0 )
 , iYPosition( 0 )
-, iZoom( 10 )
+, iZoom( -25 )
 {
 	InitMain();
 	CMyRenderer::iCurrentRenderer = this;
@@ -115,10 +115,9 @@ void CMyRenderer::LoadTextures()
 	// generate normal map using ATI's TGAtoDOT3 functions
 	redbricksTextures[2] = GenerateDOT3( redbricksTextures[1] );
 
-	/************************************************************************/
-	/* SPRITE!!!!                                                           */
-	/************************************************************************/
-	sprite = loadTGATexture("textures/particlered.tga");
+	// ##################### SPRITES ############################
+	sprite[0] = loadTGATexture("textures/particlered.tga");
+	sprite[1] = loadTGATexture("textures/particleblue.tga");
 }
 
 //
@@ -296,8 +295,7 @@ void CMyRenderer::CreateScene()
 {
 	Load3ds modelLoader;
 	
-	//this->mesh = modelLoader.Create("3ds/plane.3ds");
-	this->teapot = modelLoader.CreateUsingATI("3ds/teapot3.3ds");
+	this->teapot = modelLoader.CreateUsingATI("3ds/teapot.3ds");
 	this->wall = modelLoader.CreateUsingATI("3ds/wall.3ds");
 	this->column = modelLoader.CreateUsingATI("3ds/column.3ds");
 
@@ -355,6 +353,9 @@ void CMyRenderer::FramesPerSec()
 */
 void CMyRenderer::DrawText() const
 {
+	static GLfloat quadratic[3] = { 1.0f, 0.0f, 0.0f };
+	glPointParameterfv( GL_POINT_DISTANCE_ATTENUATION, quadratic );
+
 	float x( -0.9f ), y( -0.9f );
 	
 	//configure the transforms for 2D
@@ -429,8 +430,7 @@ void CMyRenderer::InitLights()
 
 void CMyRenderer::ComputeLightsPositions()
 {
-	static float alpha0 = 0.0f;
-	static float alpha1 = 120.0f;
+	static float alpha1 = 0.0f;
 	static float alpha2 = 240.0f;
 
 	//ComputeLightPosition(light0Position, 10.0f, alpha0, 0.0f, 0.0f);
@@ -439,21 +439,14 @@ void CMyRenderer::ComputeLightsPositions()
 	light0Position[2] = 7.0;
 	light0Position[3] = 1.0f;
 
-	ComputeLightPosition(light1Position, 10.0f, alpha1, 0.0f, 0.0f);
-	ComputeLightPosition(light2Position, 19.0f, alpha2, 0.0f, -5.0f);
+	ComputeLightPosition(light1Position, 9.0f, alpha1, 2.0f, 3.0f);
+	ComputeLightPosition(light2Position, 18.0f, alpha2, 2.0f, 10.0f);
 
-	alpha0 += 2.0f;
+	alpha1 -= 2.0f;
 
-	if ( alpha0 > 360.0f)
+	if ( alpha1 < 0.0f)
 	{
-		alpha0 -= 360.0f;
-	}
-
-	alpha1 += 2.0f;
-
-	if ( alpha1 > 360.0f)
-	{
-		alpha1 -= 360.0f;
+		alpha1 += 360.0f;
 	}
 
 	alpha2 += 2.0f;
@@ -462,6 +455,39 @@ void CMyRenderer::ComputeLightsPositions()
 	{
 		alpha2 -= 360.0f;
 	}
+}
+
+void CMyRenderer::drawPointSprite( GLuint spriteId, GLfloat spriteSize )
+{
+	static GLfloat quadratic[3] = { 0.0f, 0.0f, 0.005f };
+	glPointParameterfv( GL_POINT_DISTANCE_ATTENUATION, quadratic );
+
+	glDisable(GL_LIGHTING);
+	glActiveTexture( GL_TEXTURE1 );
+	glDisable(GL_TEXTURE_2D);
+	glActiveTexture( GL_TEXTURE2 );
+	glDisable(GL_TEXTURE_2D);
+
+	glActiveTexture(GL_TEXTURE0 );
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, spriteId);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glColor3f(1, 1, 1);
+
+	glPointSize( spriteSize );
+	glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
+
+	glEnable(GL_POINT_SPRITE);
+	glBegin(GL_POINTS);
+		glVertex3f(0, 0, 0);
+	glEnd();
+	glDisable(GL_POINT_SPRITE);
+	glEnable(GL_LIGHTING);
+	glDisable(GL_BLEND);
 }
 
 /** 
@@ -483,7 +509,7 @@ void CMyRenderer::RenderScene()
 
 	glPushMatrix();
 	{
-		glTranslatef(0, 0, -25);
+		glTranslatef(0, 0, iZoom);
 		
 		// Head Light
 		glPushMatrix();
@@ -499,44 +525,11 @@ void CMyRenderer::RenderScene()
 		/* LIGHTS !!!!                                                          */
 		/************************************************************************/
 		glPushMatrix();
-			glRotatef(-45, 0, 0, 1);
 			glLightfv(GL_LIGHT1, GL_POSITION, light1Position);
-			glTranslatef(light1Position[0], light1Position[1], light1Position[2]);
-			/************************************************************************/
-			/*                                                                      */
-			/************************************************************************/
-			//glDepthMask(GL_FALSE);
-			glDisable(GL_ALPHA_TEST); 
-			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
-			glEnable(GL_BLEND);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			glDisable(GL_LIGHTING);
-			
-			glPointSize( 30.0 );
-			glActiveTexture(GL_TEXTURE0 );
-			glBindTexture(GL_TEXTURE_2D, sprite);
-			glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
-			//glTexEnvi(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			
-			glEnable(GL_POINT_SPRITE);
-			glBegin(GL_POINTS);
-				glVertex3f(0, 0, 0);
-			glEnd();
-			glDisable(GL_POINT_SPRITE);
-			//glutSolidSphere(0.3f, 16, 16);
-			glEnable(GL_LIGHTING);
-			glDisable(GL_BLEND);
-			//glEnable(GL_ALPHA_TEST);
-			//glDepthMask(GL_TRUE);
-			/************************************************************************/
-			/*                                                                      */
-			/************************************************************************/
 		glPopMatrix();
 		
 		glPushMatrix();
 			glLightfv(GL_LIGHT2, GL_POSITION, light2Position);
-			glTranslatef(light2Position[0], light2Position[1], light2Position[2]);
-			glutSolidSphere(0.3f, 16, 16);
 		glPopMatrix();
 
 		iShaderProgram->useProgram();
@@ -553,7 +546,18 @@ void CMyRenderer::RenderScene()
 		
 		// Change texture and draw the column
 		ResetMultitexturing( redbricksTextures );
-		//this->column->draw();
+		this->column->draw();
+
+		iShaderProgram->disableProgram();
+
+		glPushMatrix();
+			glTranslatef(light1Position[0], light1Position[1], light1Position[2]);
+			drawPointSprite( sprite[0] ,32.0f );
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(light2Position[0], light2Position[1], light2Position[2]);
+			drawPointSprite( sprite[1], 16.0f );
+		glPopMatrix();
 	}
 	glPopMatrix();
 
@@ -562,8 +566,6 @@ void CMyRenderer::RenderScene()
 	{
 		angle -= 360;
 	}
-
-	iShaderProgram->disableProgram();
 	
 	DrawText();
 	
@@ -575,7 +577,7 @@ void CMyRenderer::RenderScene()
  */
 void CMyRenderer::drawRoom()
 {
-	float delta = 19.9;
+	float delta = 19.9f;
 
 	// back wall
 	glPushMatrix();
@@ -685,7 +687,15 @@ float CMyRenderer::GetYPosition()
 
 void CMyRenderer::SetZoom( float aZoom )
 {
-	this->iZoom = aZoom;
+	if ( (aZoom > -33.0f ) && ( aZoom < -15.0f ) )
+	{
+		this->iZoom = aZoom;
+	}
+	
+}
+float CMyRenderer::GetZoom()
+{
+	return this->iZoom;
 }
 
 float CMyRenderer::GetScreenHeightInPixels()
