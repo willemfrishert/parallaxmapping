@@ -82,8 +82,8 @@ vec4 computeDiffuse(vec3 normal, vec4 textureColor)
 	vec3 diffuse2 = gl_LightSource[2].diffuse.rgb;
 
 	vec3 finalColor = light0Intensity * diffuse0 * textureColor.rgb * (1.0 / (light0Distance * 0.3))
-		+ light1Intensity * diffuse1 * textureColor.rgb
-		+ light2Intensity * diffuse2 * textureColor.rgb * (1.0 / (light2Distance * 0.5));
+		+ light1Intensity * diffuse1 * textureColor.rgb * (1.0 / (light1Distance * 0.2))
+		+ light2Intensity * diffuse2 * textureColor.rgb * (1.0 / (light2Distance * 0.2));
 
 	return vec4(clamp(finalColor, 0.0, 1.0), textureColor.a);
 }
