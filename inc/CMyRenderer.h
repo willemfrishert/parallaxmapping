@@ -144,6 +144,8 @@ private:
 	// Dinamically computes lights positions
 	void ComputeLightsPositions();
 
+	void drawPointSprite(GLuint spriteId, GLfloat spriteSize);
+
 	//DRAWING FUNCTIONS
 	//------------------
 
@@ -207,7 +209,7 @@ private:
 	GLuint rocksTextures[3];
 	GLuint redbricksTextures[3];
 
-	GLuint sprite;
+	GLuint sprite[2];
 
 	// Lights definitions
 	GLfloat light1Position[4];
