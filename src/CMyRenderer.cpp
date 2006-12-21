@@ -3,6 +3,8 @@
 #include "TVertex.h"
 #include "3ds.h"
 #include "tga.h"
+#include "BumpMapping.h"
+#include "TextureMapping.h"
 
 //USE THIS FILE
 
@@ -29,13 +31,6 @@ CMyRenderer::CMyRenderer()
 : iFrame(0)
 , iPreviousFrame(0)
 , iPreviousTime(0)
-, angle(0)
-, textureMapId(0)
-, heightMapId(0)
-, tangentAttributeObject(0)
-, binormalAttributeObject(NULL)
-, textureMapUniformObject(NULL)
-, heightMapUniformObject(NULL)	
 , iXRotation( 0 )
 , iYRotation( 0 )
 , iOldXRotation( 0 )
@@ -43,6 +38,8 @@ CMyRenderer::CMyRenderer()
 , iXPosition( 0 )
 , iYPosition( 0 )
 , iZoom( -25 )
+, iFreezeLights( false )
+, iMappingIndex( 1 )
 {
 	InitMain();
 	CMyRenderer::iCurrentRenderer = this;
@@ -58,38 +55,11 @@ CMyRenderer::~CMyRenderer()
 
 void CMyRenderer::InitShaders()
 {
-	iVertexShader = new ShaderObject(GL_VERTEX_SHADER, "shader/parallaxmap.vert");
-	iFragmentShader = new ShaderObject(GL_FRAGMENT_SHADER, "shader/parallaxmap.frag");
+	iParallaxMapping = new ParallaxMapping();
 
-	iShaderProgram = new ShaderProgram();
-	
-	iShaderProgram->attachShader( *iVertexShader);
-	iShaderProgram->attachShader( *iFragmentShader );
-
-	tangentAttributeObject = new ShaderAttributeObject("tangent");
-	binormalAttributeObject = new ShaderAttributeObject("binormal");
-	tbnNormalAttributeObject = new ShaderAttributeObject("tbnNormal");
-
-	textureMapUniformObject = new ShaderUniformValue<int>();
-	textureMapUniformObject->setName("textureMap");
-	textureMapUniformObject->setValue( 0 );
-	
-	heightMapUniformObject = new ShaderUniformValue<int>();
-	heightMapUniformObject->setName("heightMap");
-	heightMapUniformObject->setValue( 1 );
-
-	normalMapUniformObject = new ShaderUniformValue<int>();
-	normalMapUniformObject->setName("normalMap");
-	normalMapUniformObject->setValue( 2 );
-
-	iShaderProgram->addAttributeObject( tangentAttributeObject );
-	iShaderProgram->addAttributeObject( binormalAttributeObject );
-	iShaderProgram->addAttributeObject( tbnNormalAttributeObject );
-	iShaderProgram->addUniformObject( textureMapUniformObject );
-	iShaderProgram->addUniformObject( heightMapUniformObject );
-	iShaderProgram->addUniformObject( normalMapUniformObject );
-
-	iShaderProgram->buildProgram();
+	iMappings[ 0 ] = iParallaxMapping;
+	iMappings[ 1 ] = new BumpMapping();
+	//iMappings[ 2 ] = new TextureMapping();
 }
 
 void CMyRenderer::LoadTextures()
@@ -137,22 +107,6 @@ void CMyRenderer::InitMain()
 	InitShaders();
 
 	InitLights();
-}
-
-/**
- * @param textureIds: 0: textureMap; 1: heightMap; 2: normalMap
- */
-void CMyRenderer::ResetMultitexturing( GLuint* textureIds )
-{
-	// initialize multitexturing
-	glActiveTexture(GL_TEXTURE0 );
-	glBindTexture(GL_TEXTURE_2D, textureIds[0]);
-
-	glActiveTexture(GL_TEXTURE1 );
-	glBindTexture(GL_TEXTURE_2D, textureIds[1]);
-
-	glActiveTexture(GL_TEXTURE2 );
-	glBindTexture(GL_TEXTURE_2D, textureIds[2]);
 }
 
 void CMyRenderer::ReadPixel(GLubyte *image, GLubyte *pix, int x, int y, int width)
@@ -300,19 +254,6 @@ void CMyRenderer::CreateScene()
 	this->column = modelLoader.CreateUsingATI("3ds/column.3ds");
 
 	//this->mesh->createInverseTBNMatrices();
-
-	// Set the TBN matrix attributes to the meshes
-	this->teapot->setBinormalAttributeObject( binormalAttributeObject );
-	this->teapot->setTangentAttributeObject( tangentAttributeObject );
-	this->teapot->setTBNNormalAttributeObject( tbnNormalAttributeObject );
-
-	this->wall->setBinormalAttributeObject( binormalAttributeObject );
-	this->wall->setTangentAttributeObject( tangentAttributeObject );
-	this->wall->setTBNNormalAttributeObject( tbnNormalAttributeObject );
-
-	this->column->setBinormalAttributeObject( binormalAttributeObject );
-	this->column->setTangentAttributeObject( tangentAttributeObject );
-	this->column->setTBNNormalAttributeObject( tbnNormalAttributeObject );
 }
 
 
@@ -442,18 +383,21 @@ void CMyRenderer::ComputeLightsPositions()
 	ComputeLightPosition(light1Position, 9.0f, alpha1, 2.0f, 3.0f);
 	ComputeLightPosition(light2Position, 18.0f, alpha2, 2.0f, 10.0f);
 
-	alpha1 -= 2.0f;
-
-	if ( alpha1 < 0.0f)
+	/* freeze or not to freeze.... :P */
+	if ( ! iFreezeLights )
 	{
-		alpha1 += 360.0f;
-	}
+		alpha1 -= 2.0f;
+		alpha2 += 2.0f;
 
-	alpha2 += 2.0f;
+		if ( alpha1 < 0.0f)
+		{
+			alpha1 += 360.0f;
+		}
 
-	if ( alpha2 > 360.0f)
-	{
-		alpha2 -= 360.0f;
+		if ( alpha2 > 360.0f)
+		{
+			alpha2 -= 360.0f;
+		}
 	}
 }
 
@@ -503,10 +447,6 @@ void CMyRenderer::RenderScene()
 	// Draw Text
 	FramesPerSec();
 
-	/*iShaderProgram->useProgram();
-
-	glEnable(GL_TEXTURE_2D);*/
-
 	glPushMatrix();
 	{
 		glTranslatef(0, 0, iZoom);
@@ -532,23 +472,33 @@ void CMyRenderer::RenderScene()
 			glLightfv(GL_LIGHT2, GL_POSITION, light2Position);
 		glPopMatrix();
 
-		iShaderProgram->useProgram();
+		//iParallaxMapping->enable();
+		//iBumpMapping->enable();
+		iMappings[ iMappingIndex ]->enable();
 
 		glEnable(GL_TEXTURE_2D);
 
 		// Change texture and draw the teapot
-		ResetMultitexturing( rocksTextures );
+		iParallaxMapping->setBiasValue( 0.2f );
+		//iParallaxMapping->setup(this->teapot, rocksTextures);
+		iMappings[ iMappingIndex ]->setup(this->teapot, rocksTextures);
 		this->teapot->draw();
 		
 		// Change texture and draw the room walls
-		ResetMultitexturing( rockwallTextures );
+		iParallaxMapping->setBiasValue( 0.05f );
+		//iParallaxMapping->setup(this->wall, rockwallTextures);
+		iMappings[ iMappingIndex ]->setup(this->wall, rockwallTextures);
 		drawRoom();
 		
 		// Change texture and draw the column
-		ResetMultitexturing( redbricksTextures );
+		iParallaxMapping->setBiasValue( 0.06f );
+		//iParallaxMapping->setup(this->column, redbricksTextures);
+		iMappings[ iMappingIndex ]->setup(this->column, redbricksTextures);
 		this->column->draw();
 
-		iShaderProgram->disableProgram();
+		//iParallaxMapping->disable();
+		//iBumpMapping->disable();
+		iMappings[ iMappingIndex ]->disable();
 
 		glPushMatrix();
 			glTranslatef(light1Position[0], light1Position[1], light1Position[2]);
@@ -560,12 +510,6 @@ void CMyRenderer::RenderScene()
 		glPopMatrix();
 	}
 	glPopMatrix();
-
-	angle += 1.5f;
-	if (angle > 360)
-	{
-		angle -= 360;
-	}
 	
 	DrawText();
 	
@@ -701,6 +645,20 @@ float CMyRenderer::GetZoom()
 float CMyRenderer::GetScreenHeightInPixels()
 {
 	return this->iScreenHeight;
+}
+
+/**
+ */
+void CMyRenderer::ToggleMapping()
+{
+	iMappingIndex = (iMappingIndex + 1) % 2;
+}
+
+/**
+ */
+void CMyRenderer::ToggleLightMovement()
+{
+	this->iFreezeLights = ! this->iFreezeLights;
 }
 
 //-----------------------------

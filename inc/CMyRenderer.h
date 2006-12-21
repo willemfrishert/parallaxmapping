@@ -9,6 +9,7 @@
 #include "ShaderUniformObject.h"
 #include "ShaderUniformValue.h"
 #include "ShaderUniformVector.h"
+#include "ParallaxMapping.h"
 
 
 //CONSTANTS:
@@ -96,6 +97,10 @@ public:
 
 	float GetScreenHeightInPixels();
 
+	void ToggleMapping();
+
+	void ToggleLightMovement();
+
 
 	//GETTERS
 	//---------------------------------------
@@ -176,20 +181,10 @@ private:
 	CMesh* column;
 	CMesh* teapot;
 
-	ShaderProgram* iShaderProgram;
-	ShaderObject* iVertexShader;
-	ShaderObject* iFragmentShader;
-	
-	float angle;
-	GLuint textureMapId;
-	GLuint heightMapId;
-	GLuint normalMapId;
-	ShaderAttributeObject* tangentAttributeObject;
-	ShaderAttributeObject* binormalAttributeObject;
-	ShaderAttributeObject* tbnNormalAttributeObject;
-	ShaderUniformValue<int>* textureMapUniformObject;
-	ShaderUniformValue<int>* heightMapUniformObject;	
-	ShaderUniformValue<int>* normalMapUniformObject;
+	ParallaxMapping* iParallaxMapping;
+	Mapping* iMappings[3];
+
+	unsigned int iMappingIndex;
 
 	// Trackball attributes
 	float iXRotation;
@@ -201,9 +196,6 @@ private:
 	float iZoom;
 	float iScreenHeight;
 
-	/************************************************************************/
-	/* TEMPORARY STUFF: MUST BE ORGANIZED IN SOME WAY!!!!!!!                */
-	/************************************************************************/
 	// 0: texture map; 1: bump map; 2: normal map
 	GLuint rockwallTextures[3];
 	GLuint rocksTextures[3];
@@ -215,6 +207,7 @@ private:
 	GLfloat light1Position[4];
 	GLfloat light0Position[4];
 	GLfloat light2Position[4];
+	bool iFreezeLights;
 
 	GLfloat diffuse0[4];
 	GLfloat diffuse1[4];
