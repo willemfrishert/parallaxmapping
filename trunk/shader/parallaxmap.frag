@@ -3,6 +3,8 @@ uniform sampler2D heightMap;
 uniform sampler2D textureMap;
 uniform sampler2D normalMap;
 
+uniform float parallaxBias;
+
 //The vertex color passed
 varying vec4 passColor;
 
@@ -33,11 +35,14 @@ void main()
 	// for basic texture mapping 
 	vec2 t0 = gl_TexCoord[0].xy;
 	
-	float hSB = 0.04 * (texture2D(heightMap, t0).x - 0.5);
+	float hSB = parallaxBias * (texture2D(heightMap, t0).x - 0.5);
 
 	// adding the biased and scaled height (multiplied by the cos)
-	// ### The texture2D(normalMap, t0).z just shrinks the bump height
+	// ### The texture2D(normalMap, t0).z just shrinks the bump height:
+	// when z = 1, it should displace the height the most
 	// ### The viewDirNormalized.xy because we just need the XY component
+	// to limit the radius of the offset to a max of 1; viewDirNormalized.xy is
+	// in fact the cosine between viewDir and its projection on the surface
 	vec2 tOffset = t0 + hSB * texture2D(normalMap, t0).z * viewDirNormalized.xy;
 	
 	// Get the displaced normal of the normal map
@@ -47,11 +52,6 @@ void main()
 
 	// Find the dot product between the light direction and the normal
 	vec4 color = computeDiffuse(bumpNormal, parallaxColor);
-	
-	// Calculate the final color gl_FragColor
-	//vec4 diffuse = vec4(NdotL * parallaxColor.rgb, parallaxColor.a);
-	//vec4 diffuse = vec4(color + parallaxColor.rgb, parallaxColor.a);
-	//diffuse = vec4(NdotL, NdotL, NdotL, 1.0);
 
 	gl_FragColor = color;
 }
@@ -82,8 +82,8 @@ vec4 computeDiffuse(vec3 normal, vec4 textureColor)
 	vec3 diffuse2 = gl_LightSource[2].diffuse.rgb;
 
 	vec3 finalColor = light0Intensity * diffuse0 * textureColor.rgb * (1.0 / (light0Distance * 0.3))
-		+ light1Intensity * diffuse1 * textureColor.rgb * (1.0 / (light1Distance * 0.2))
-		+ light2Intensity * diffuse2 * textureColor.rgb * (1.0 / (light2Distance * 0.2));
+		+ light1Intensity * diffuse1 * textureColor.rgb * (1.0 / (light1Distance * 0.15))
+		+ light2Intensity * diffuse2 * textureColor.rgb * (1.0 / (light2Distance * 0.15));
 
 	return vec4(clamp(finalColor, 0.0, 1.0), textureColor.a);
 }

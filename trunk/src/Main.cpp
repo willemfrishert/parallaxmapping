@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 
 	renderer->CreateScene();
 
-	//glutFullScreen();
+	glutFullScreen();
 
 	//START GL loop
 	glutMainLoop();

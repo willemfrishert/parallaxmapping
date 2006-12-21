@@ -27,7 +27,20 @@ CMyUiEvents::~CMyUiEvents()
 //Used to handle the keyboard input (ASCII Characters)
 void CMyUiEvents::ProcessNormalKeys(unsigned char key, int x, int y)
 {
+	if (key == 't')
+	{
+		this->iRenderer->ToggleMapping();
+	}
 
+	if (key == 'l')
+	{
+		this->iRenderer->ToggleLightMovement();
+	}
+
+	if (key == 'q')
+	{
+		exit( 0 );
+	}
 }
 
 // Used to handle the keyboard input (not ASCII Characters)
